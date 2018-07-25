@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "552368109820",
+    "firebase_url": "https://mytelkomakses-9b9ad.firebaseio.com",
+    "project_id": "mytelkomakses-9b9ad",
+    "storage_bucket": "mytelkomakses-9b9ad.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:552368109820:android:d11e90cb1b07694c",
+        "android_client_info": {
+          "package_name": "com.telkom.lutfi.mytelkomakses"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "552368109820-nd4mj59nci7eoe764lcpktpotkaknr24.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.telkom.lutfi.mytelkomakses",
+            "certificate_hash": "418e990d4f9a8daac537dedd5a412af522703f7c"
+          }
+        },
+        {
+          "client_id": "552368109820-old52e5fm33gjk8tusuudufbl5g7kiqn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVK2ZZ14Br99dYTGtlAB4dxCCRtuxYk_I"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "552368109820-old52e5fm33gjk8tusuudufbl5g7kiqn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
