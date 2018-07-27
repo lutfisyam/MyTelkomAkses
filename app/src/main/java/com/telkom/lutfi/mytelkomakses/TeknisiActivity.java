@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -27,7 +28,6 @@ import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,7 +40,7 @@ import com.telkom.lutfi.mytelkomakses.model.Order;
 
 import java.util.ArrayList;
 
-public class TeknisiActivity extends AppCompatActivity implements android.location.LocationListener {
+public class TeknisiActivity extends AppCompatActivity implements LocationListener {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFireStore;
@@ -53,34 +53,9 @@ public class TeknisiActivity extends AppCompatActivity implements android.locati
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_layout);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
+        Toolbar toolbar =(Toolbar)findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
         Intent intent = getIntent();
-
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        // Define the criteria how to select the locatioin provider -> use
-        // default
-        Criteria criteria = new Criteria();
-        provider = locationManager.getBestProvider(criteria, false);
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        Location location = locationManager.getLastKnownLocation(provider);
-
-        // Initialize the location fields
-        if (location != null) {
-            System.out.println("Provider " + provider + " has been selected.");
-            onLocationChanged(location);
-        } else {
-            Toast.makeText(TeknisiActivity.this, "lokasi gakonok", Toast.LENGTH_LONG).show();
-        }
 
         String Id_user = intent.getStringExtra("montu");
         String Id_grup = intent.getStringExtra("nama_grup");
@@ -119,7 +94,7 @@ public class TeknisiActivity extends AppCompatActivity implements android.locati
                     @Override
                     public void onClick(View v) {
 
-                        Intent intent = new Intent(getApplicationContext(), DetailGrupOrderActivity.class);
+                        Intent intent = new Intent(getApplicationContext(),DetailGrupOrderActivity.class);
                         intent.putExtra("sc", model.getSc());
                         intent.putExtra("nama", model.getNama());
                         intent.putExtra("alamat", model.getAlamat());
@@ -134,7 +109,6 @@ public class TeknisiActivity extends AppCompatActivity implements android.locati
                     }
                 });
             }
-
             @Override
             public TeknisiActivity.TeamViewHolder onCreateViewHolder(ViewGroup group, int i) {
                 View view = LayoutInflater.from(group.getContext())
@@ -147,28 +121,53 @@ public class TeknisiActivity extends AppCompatActivity implements android.locati
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(adapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(TeknisiActivity.this));
-    }
 
+        //MAPAS
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        // Define the criteria how to select the locatioin provider -> use
+        // default
+        Criteria criteria = new Criteria();
+        provider = locationManager.getBestProvider(criteria, false);
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        Location location = locationManager.getLastKnownLocation(provider);
+
+        // Initialize the location fields
+        if (location != null) {
+            System.out.println("Provider " + provider + " has been selected.");
+            onLocationChanged(location);
+        } else {
+            Toast.makeText(TeknisiActivity.this, "lokasi gakonok", Toast.LENGTH_LONG).show();
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
+        MenuInflater inflater =getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
+        int id= item.getItemId();
 
-        switch (id) {
+        switch (id){
             case R.id.grupTeknisipb:
-                Intent i = new Intent(getApplicationContext(), ListGrupPasang.class);
+                Intent i = new Intent (getApplicationContext(),ListGrupPasang.class);
                 startActivity(i);
                 super.onBackPressed();
                 break;
             case R.id.grupTeknisigangguan:
-                Intent I = new Intent(getApplicationContext(), ListGrupGangguan.class);
+                Intent I = new Intent (getApplicationContext(),ListGrupGangguan.class);
                 startActivity(I);
                 super.onBackPressed();
                 break;
@@ -181,6 +180,28 @@ public class TeknisiActivity extends AppCompatActivity implements android.locati
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        adapter.startListening();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        adapter.stopListening();
+    }
+
+
+    private void ambilData(DocumentSnapshot documentSnapshot, ArrayList<String> team) {
+
+        {
+            team.clear();
+            String nama = documentSnapshot.getString("nama_grup");
+            team.add(nama);
+        }
+
+    }
     @Override
     protected void onResume() {
         super.onResume();
@@ -212,11 +233,6 @@ public class TeknisiActivity extends AppCompatActivity implements android.locati
         Toast.makeText(TeknisiActivity.this,String.valueOf(lng), Toast.LENGTH_LONG).show();
     }
 
-
-
-
-
-
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
         // TODO Auto-generated method stub
@@ -234,30 +250,6 @@ public class TeknisiActivity extends AppCompatActivity implements android.locati
     public void onProviderDisabled(String provider) {
         Toast.makeText(this, "Disabled provider " + provider,
                 Toast.LENGTH_SHORT).show();
-    }
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        adapter.startListening();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        adapter.stopListening();
-    }
-
-
-    private void ambilData(DocumentSnapshot documentSnapshot, ArrayList<String> team) {
-
-        {
-            team.clear();
-            String nama = documentSnapshot.getString("nama_grup");
-            team.add(nama);
-        }
-
     }
 
     private class TeamViewHolder extends RecyclerView.ViewHolder {
@@ -318,4 +310,7 @@ public class TeknisiActivity extends AppCompatActivity implements android.locati
             });
         }
     }
+
+
+
 }

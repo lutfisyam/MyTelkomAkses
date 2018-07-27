@@ -62,7 +62,7 @@ public class TeamLeaderActivity extends AppCompatActivity {
         Order.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(TeamLeaderActivity.this, MenuGrupTeknisi.class);
+                Intent intent = new Intent(TeamLeaderActivity.this, MenuOrderTeknisi.class);
                 startActivity(intent);
             }
         });
