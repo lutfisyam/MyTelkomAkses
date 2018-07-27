@@ -4,10 +4,10 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +16,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.squareup.picasso.Picasso;
 
 public class DetailGrupOrderActivity extends AppCompatActivity {
 
@@ -23,6 +24,9 @@ public class DetailGrupOrderActivity extends AppCompatActivity {
     String nkontol, JANCOK;
     FirebaseAuth mAuth;
     FirebaseFirestore mCurrentUserRef;
+    private ImageView fotoBuktiImage;
+
+    private String SCid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,9 +43,13 @@ public class DetailGrupOrderActivity extends AppCompatActivity {
         ndem = (TextView) findViewById(R.id.showndem);
         alpro = (TextView) findViewById(R.id.showalpro);
         status = (TextView) findViewById(R.id.showstatus);
+        fotoBuktiImage = (ImageView) findViewById(R.id.detail_foto_bukti);
+        SCid = getIntent().getStringExtra("sc");
 
+        // Pasang foto bukti
+        Picasso.get().load(getIntent().getStringExtra("bukti")).into(fotoBuktiImage);
 
-        sc.setText(getIntent().getStringExtra("sc"));
+        sc.setText(SCid);
         nama.setText(getIntent().getStringExtra("nama"));
         alamat.setText(getIntent().getStringExtra("alamat"));
         kontak.setText(getIntent().getStringExtra("kontak"));
@@ -74,34 +82,30 @@ public class DetailGrupOrderActivity extends AppCompatActivity {
 
                                 Toast.makeText(DetailGrupOrderActivity.this, nkontol, Toast.LENGTH_LONG).show();
 
-                                if (nkontol.equals("belum")){
+                                if (nkontol.equals("belum")) {
                                     Button but = (Button) findViewById(R.id.kerjakan);
                                     but.setVisibility(View.VISIBLE);
                                     Button but2 = (Button) findViewById(R.id.selesai);
                                     but2.setVisibility(View.GONE);
 
-                                }
-                                else if (nkontol.equals("proses")){
+                                } else if (nkontol.equals("proses")) {
                                     Button but = (Button) findViewById(R.id.selesai);
                                     but.setVisibility(View.VISIBLE);
                                     Button but2 = (Button) findViewById(R.id.kerjakan);
                                     but2.setVisibility(View.GONE);
 
-                                }
-                                else if (nkontol.equals("selesai")){
+                                } else if (nkontol.equals("selesai")) {
                                     Button but = (Button) findViewById(R.id.selesai);
                                     but.setVisibility(View.GONE);
                                     Button but2 = (Button) findViewById(R.id.kerjakan);
                                     but2.setVisibility(View.GONE);
 
-                                }
-                                else {
+                                } else {
                                     Toast.makeText(DetailGrupOrderActivity.this, "NYASAR", Toast.LENGTH_LONG).show();
                                 }
 
 
-                            }
-                            else {
+                            } else {
                                 Button but = (Button) findViewById(R.id.kerjakan);
                                 but.setVisibility(View.GONE);
                                 Button but2 = (Button) findViewById(R.id.selesai);
@@ -123,7 +127,7 @@ public class DetailGrupOrderActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DetailGrupOrderActivity.this, InputReportTeknisiActivity.class);
-                intent.putExtra("sc", getIntent().getStringExtra("sc"));
+                intent.putExtra("sc", SCid);
                 startActivity(intent);
                 finish();
             }
@@ -134,6 +138,7 @@ public class DetailGrupOrderActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DetailGrupOrderActivity.this, InputFinishReportActivity.class);
+                intent.putExtra("OTNIEL_KONTOL",SCid);
                 startActivity(intent);
                 finish();
             }

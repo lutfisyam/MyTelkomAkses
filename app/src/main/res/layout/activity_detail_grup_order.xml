@@ -2,15 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".DetailGrupOrderActivity">
+
     <LinearLayout
-        android:layout_marginLeft="18dp"
-        android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="29dp"
+        android:layout_marginLeft="18dp"
+        android:layout_marginTop="20dp"
         android:orientation="horizontal">
 
         <TextView
@@ -32,10 +33,10 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_marginLeft="18dp"
-        android:layout_marginTop="2dp"
         android:layout_width="match_parent"
         android:layout_height="29dp"
+        android:layout_marginLeft="18dp"
+        android:layout_marginTop="2dp"
         android:orientation="horizontal">
 
         <TextView
@@ -57,10 +58,10 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_marginLeft="18dp"
-        android:layout_marginTop="2dp"
         android:layout_width="match_parent"
         android:layout_height="29dp"
+        android:layout_marginLeft="18dp"
+        android:layout_marginTop="2dp"
         android:orientation="horizontal">
 
         <TextView
@@ -80,11 +81,12 @@
             android:textAlignment="viewStart"
             android:textStyle="bold" />
     </LinearLayout>
+
     <LinearLayout
-        android:layout_marginLeft="18dp"
-        android:layout_marginTop="2dp"
         android:layout_width="match_parent"
         android:layout_height="29dp"
+        android:layout_marginLeft="18dp"
+        android:layout_marginTop="2dp"
         android:orientation="horizontal">
 
         <TextView
@@ -104,11 +106,12 @@
             android:textAlignment="viewStart"
             android:textStyle="bold" />
     </LinearLayout>
+
     <LinearLayout
-        android:layout_marginLeft="18dp"
-        android:layout_marginTop="2dp"
         android:layout_width="match_parent"
         android:layout_height="29dp"
+        android:layout_marginLeft="18dp"
+        android:layout_marginTop="2dp"
         android:orientation="horizontal">
 
         <TextView
@@ -128,11 +131,12 @@
             android:textAlignment="viewStart"
             android:textStyle="bold" />
     </LinearLayout>
+
     <LinearLayout
-        android:layout_marginLeft="18dp"
-        android:layout_marginTop="2dp"
         android:layout_width="match_parent"
         android:layout_height="29dp"
+        android:layout_marginLeft="18dp"
+        android:layout_marginTop="2dp"
         android:orientation="horizontal">
 
         <TextView
@@ -152,11 +156,12 @@
             android:textAlignment="viewStart"
             android:textStyle="bold" />
     </LinearLayout>
+
     <LinearLayout
-        android:layout_marginLeft="18dp"
-        android:layout_marginTop="2dp"
         android:layout_width="match_parent"
         android:layout_height="29dp"
+        android:layout_marginLeft="18dp"
+        android:layout_marginTop="2dp"
         android:orientation="horizontal">
 
         <TextView
@@ -178,10 +183,10 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_marginLeft="18dp"
-        android:layout_marginTop="2dp"
         android:layout_width="match_parent"
         android:layout_height="29dp"
+        android:layout_marginLeft="18dp"
+        android:layout_marginTop="2dp"
         android:orientation="horizontal">
 
         <TextView
@@ -204,10 +209,16 @@
 
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/detail_foto_bukti"
+        android:scaleType="fitCenter"
+        android:layout_width="match_parent"
+        android:layout_height="150dp" />
+
     <LinearLayout
-        android:layout_marginTop="50dp"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_marginTop="50dp"
         android:orientation="horizontal">
 
         <Button
@@ -216,6 +227,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Kerjakan" />
+
         <Button
             android:id="@+id/selesai"
             android:layout_width="match_parent"

@@ -1,4 +1,4 @@
-package com.telkom.lutfi.mytelkomakses.entitas;
+package com.telkom.lutfi.mytelkomakses.model;
 
 public class Team {
     private String nama_grup;

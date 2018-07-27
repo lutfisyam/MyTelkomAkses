@@ -6,16 +6,24 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".InputFinishReportActivity">
+
     <ImageView
         android:id="@+id/photoImage"
-        android:layout_weight="9"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"/>
-    <Button
-        android:id="@+id/opencamera"
-        android:text="OpenCamera"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        />
+        android:layout_weight="9" />
+
+    <Button
+        android:id="@+id/opencamera"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="OpenCamera" />
+
+    <Button
+        android:id="@+id/upload_butki_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Upload"
+        android:enabled="false"/>
 
 </LinearLayout>

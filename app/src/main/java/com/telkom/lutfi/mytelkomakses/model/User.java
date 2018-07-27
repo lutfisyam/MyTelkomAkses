@@ -1,4 +1,4 @@
-package com.telkom.lutfi.mytelkomakses.entitas;
+package com.telkom.lutfi.mytelkomakses.model;
 
 /**
  * Created by Lutfi on 02/06/2018.

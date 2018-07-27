@@ -32,7 +32,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.telkom.lutfi.mytelkomakses.entitas.User;
+import com.telkom.lutfi.mytelkomakses.model.User;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package com.telkom.lutfi.mytelkomakses.entitas;
+package com.telkom.lutfi.mytelkomakses.model;
 
 public class Order {
     private String sc;
@@ -11,13 +11,13 @@ public class Order {
     private String Alproname;
     private String team;
     private String status;
+    private String bukti;
 
 
-
-    public Order(){
+    public Order() {
     }
 
-    public Order(String status, String sc, String nama, String alamat, String kontak, String jenis, String ncli, String ndem, String alproname, String team) {
+    public Order(String sc, String nama, String alamat, String kontak, String jenis, String ncli, String ndem, String alproname, String team, String status, String bukti) {
         this.sc = sc;
         this.nama = nama;
         this.alamat = alamat;
@@ -25,9 +25,10 @@ public class Order {
         this.jenis = jenis;
         this.ncli = ncli;
         this.ndem = ndem;
-        this.Alproname = alproname;
+        Alproname = alproname;
         this.team = team;
         this.status = status;
+        this.bukti = bukti;
     }
 
     public String getStatus() {
@@ -46,7 +47,9 @@ public class Order {
         this.sc = sc;
     }
 
-    public String getNama() { return nama; }
+    public String getNama() {
+        return nama;
+    }
 
     public void setNama(String nama) {
         this.nama = nama;
@@ -106,5 +109,13 @@ public class Order {
 
     public void setTeam(String team) {
         this.team = team;
+    }
+
+    public String getBukti() {
+        return bukti;
+    }
+
+    public void setBukti(String bukti) {
+        this.bukti = bukti;
     }
 }

@@ -1,4 +1,4 @@
-package com.telkom.lutfi.mytelkomakses;
+package com.telkom.lutfi.mytelkomakses.TeamLeaderGrupTeknisi;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,10 +29,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.telkom.lutfi.mytelkomakses.entitas.Order;
+import com.telkom.lutfi.mytelkomakses.DetailGrupOrderActivity;
+import com.telkom.lutfi.mytelkomakses.R;
+import com.telkom.lutfi.mytelkomakses.model.Order;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ListDetailGrupPasangBaru extends AppCompatActivity {
 

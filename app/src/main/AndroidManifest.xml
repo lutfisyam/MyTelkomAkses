@@ -7,6 +7,9 @@
          Google Maps Android API v2, but you must specify either coarse or fine
          location permissions for the 'MyLocation' functionality. 
     -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
@@ -26,17 +29,19 @@
         <activity android:name=".HomeActivity" />
         <activity android:name=".TeknisiActivity" />
         <activity android:name=".TeamLeaderActivity" />
-        <activity android:name=".ListGrupPasang" />
-        <activity android:name=".ListGrupGangguan" />
+        <activity android:name=".TeamLeaderGrupTeknisi.ListGrupPasang" />
+        <activity android:name=".TeamLeaderGrupTeknisi.ListGrupGangguan" />
         <activity android:name=".ListTeamLeader" />
-        <activity android:name=".ListTeknisiPasangBaru" />
-        <activity android:name=".ListTeknisiGangguan" />
-        <activity android:name=".ListOrder" />
-        <activity android:name=".ListDetailGrupGangguan" />
-        <activity android:name=".ListDetailGrupPasangBaru" />
-        <activity android:name=".ListOrderPasangBaru" />
-        <activity android:name=".ListOrderGangguan" />
-        <activity android:name=".TeknisiMenuActivity" />
+        <activity android:name=".TeamLeaderTeknisi.ListTeknisiPasangBaru" />
+        <activity android:name=".TeamLeaderTeknisi.ListTeknisiGangguan" />
+        <activity android:name=".TeamLeaderGrupTeknisi.MenuGrupTeknisi" />
+        <activity android:name=".TeamLeaderOrderTeknisi.ListOrder" />
+        <activity android:name=".TeamLeaderGrupTeknisi.ListDetailGrupGangguan" />
+        <activity android:name=".TeamLeaderGrupTeknisi.ListDetailGrupPasangBaru" />
+        <activity android:name=".TeamLeaderOrderTeknisi.ListOrderPasangBaru" />
+        <activity android:name=".TeamLeaderOrderTeknisi.MenuOrderTeknisi" />
+        <activity android:name=".TeamLeaderOrderTeknisi.ListOrderGangguan" />
+        <activity android:name=".TeamLeaderTeknisi.TeknisiMenuActivity" />
         <activity android:name=".DetailGrupOrderActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -50,11 +55,11 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
+        <activity android:name=".InputReportTeknisiActivity" />
+        <activity android:name=".InputFinishReportActivity" />
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps" />
-        <activity android:name=".InputReportTeknisiActivity" />
-        <activity android:name=".InputFinishReportActivity"></activity>
+            android:label="@string/title_activity_maps"></activity>
     </application>
 
 </manifest>

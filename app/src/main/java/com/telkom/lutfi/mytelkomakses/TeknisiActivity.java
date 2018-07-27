@@ -1,8 +1,14 @@
 package com.telkom.lutfi.mytelkomakses;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,39 +21,66 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.telkom.lutfi.mytelkomakses.entitas.Order;
+import com.telkom.lutfi.mytelkomakses.TeamLeaderGrupTeknisi.ListGrupGangguan;
+import com.telkom.lutfi.mytelkomakses.TeamLeaderGrupTeknisi.ListGrupPasang;
+import com.telkom.lutfi.mytelkomakses.model.Order;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class TeknisiActivity extends AppCompatActivity {
+public class TeknisiActivity extends AppCompatActivity implements android.location.LocationListener {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFireStore;
     private FirestoreRecyclerAdapter adapter;
     private RecyclerView mRecyclerView;
+    private LocationManager locationManager;
+    private String provider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_layout);
-        Toolbar toolbar =(Toolbar)findViewById(R.id.app_bar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
         Intent intent = getIntent();
+
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        // Define the criteria how to select the locatioin provider -> use
+        // default
+        Criteria criteria = new Criteria();
+        provider = locationManager.getBestProvider(criteria, false);
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        Location location = locationManager.getLastKnownLocation(provider);
+
+        // Initialize the location fields
+        if (location != null) {
+            System.out.println("Provider " + provider + " has been selected.");
+            onLocationChanged(location);
+        } else {
+            Toast.makeText(TeknisiActivity.this, "lokasi gakonok", Toast.LENGTH_LONG).show();
+        }
 
         String Id_user = intent.getStringExtra("montu");
         String Id_grup = intent.getStringExtra("nama_grup");
@@ -86,7 +119,7 @@ public class TeknisiActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
 
-                        Intent intent = new Intent(getApplicationContext(),DetailGrupOrderActivity.class);
+                        Intent intent = new Intent(getApplicationContext(), DetailGrupOrderActivity.class);
                         intent.putExtra("sc", model.getSc());
                         intent.putExtra("nama", model.getNama());
                         intent.putExtra("alamat", model.getAlamat());
@@ -95,11 +128,13 @@ public class TeknisiActivity extends AppCompatActivity {
                         intent.putExtra("ndem", model.getNdem());
                         intent.putExtra("alproname", model.getAlproname());
                         intent.putExtra("status", model.getStatus());
+                        intent.putExtra("bukti", model.getBukti());
                         startActivity(intent);
 //                        Toast.makeText(ListDetailGrupPasangBaru.this, id, Toast.LENGTH_LONG).show();
                     }
                 });
             }
+
             @Override
             public TeknisiActivity.TeamViewHolder onCreateViewHolder(ViewGroup group, int i) {
                 View view = LayoutInflater.from(group.getContext())
@@ -114,25 +149,26 @@ public class TeknisiActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(TeknisiActivity.this));
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater =getMenuInflater();
+        MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id= item.getItemId();
+        int id = item.getItemId();
 
-        switch (id){
+        switch (id) {
             case R.id.grupTeknisipb:
-                Intent i = new Intent (getApplicationContext(),ListGrupPasang.class);
+                Intent i = new Intent(getApplicationContext(), ListGrupPasang.class);
                 startActivity(i);
                 super.onBackPressed();
                 break;
             case R.id.grupTeknisigangguan:
-                Intent I = new Intent (getApplicationContext(),ListGrupGangguan.class);
+                Intent I = new Intent(getApplicationContext(), ListGrupGangguan.class);
                 startActivity(I);
                 super.onBackPressed();
                 break;
@@ -144,6 +180,62 @@ public class TeknisiActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        locationManager.requestLocationUpdates(provider, 400, 1, this);
+    }
+
+    /* Remove the locationlistener updates when Activity is paused */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        locationManager.removeUpdates( this);
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        int lat = (int) (location.getLatitude());
+        int lng = (int) (location.getLongitude());
+        Toast.makeText(TeknisiActivity.this, String.valueOf(lat), Toast.LENGTH_LONG).show();
+        Toast.makeText(TeknisiActivity.this,String.valueOf(lng), Toast.LENGTH_LONG).show();
+    }
+
+
+
+
+
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+        Toast.makeText(this, "Enabled new provider " + provider,
+                Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+        Toast.makeText(this, "Disabled provider " + provider,
+                Toast.LENGTH_SHORT).show();
+    }
+
 
     @Override
     protected void onStart() {

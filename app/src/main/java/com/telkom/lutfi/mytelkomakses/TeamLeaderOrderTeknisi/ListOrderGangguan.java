@@ -1,4 +1,4 @@
-package com.telkom.lutfi.mytelkomakses;
+package com.telkom.lutfi.mytelkomakses.TeamLeaderOrderTeknisi;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,7 +18,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -37,10 +36,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.telkom.lutfi.mytelkomakses.entitas.User;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.telkom.lutfi.mytelkomakses.LoginActivity;
+import com.telkom.lutfi.mytelkomakses.R;
+import com.telkom.lutfi.mytelkomakses.model.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ListOrderGangguan extends AppCompatActivity {
@@ -245,23 +248,35 @@ public class ListOrderGangguan extends AppCompatActivity {
             final EditText inputNcli = (EditText) addFormView.findViewById(R.id.enter_ncli);
             final EditText inputNdem = (EditText) addFormView.findViewById(R.id.enter_ndem);
             final EditText inputAlproname = (EditText) addFormView.findViewById(R.id.enter_alproname);
+            final Spinner inputTeamName = (Spinner) addFormView.findViewById(R.id.enter_grupteamteknisi);
             spin = (Spinner) addFormView.findViewById(R.id.enter_gruporder);
 
-//            adaptr=new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_spinner_item,R.array.Pekerjaan);
+            final List<String> teamList = new ArrayList<>();
+
             adaptr = ArrayAdapter.createFromResource(context,R.array.Pekerjaan,android.R.layout.simple_spinner_item);
             adaptr.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spin.setAdapter(adaptr);
-            spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    Toast.makeText(getBaseContext(),parent.getItemAtPosition(position)+ "selected",Toast.LENGTH_LONG).show();
-                }
 
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
+            FirebaseFirestore.getInstance().collection("team").orderBy("jenis").get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (DocumentSnapshot documentSnapshot : task.getResult()) {
+                                    teamList.add(documentSnapshot.getString("nama_grup"));
+//                                    teamIdList.add(documentSnapshot.getId());
 
-                }
-            });
+//                                    Toast.makeText(ListTeknisi.this, documentSnapshot.getString("nama"), Toast.LENGTH_LONG).show();
+
+                                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(ListOrderGangguan.this, android.R.layout.simple_spinner_item, teamList);
+                                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                    inputTeamName.setAdapter(adapter);
+
+
+                                }
+                            }
+                        }
+                    });
 
             Button simpan = (Button) addFormView.findViewById(R.id.btn_simpan_order);
             Button reset = (Button) addFormView.findViewById(R.id.btn_reset_order);
@@ -273,6 +288,7 @@ public class ListOrderGangguan extends AppCompatActivity {
                 public void onClick(View v) {
 
                     int post = spin.getSelectedItemPosition();
+                    int posisi_E1 = inputTeamName.getSelectedItemPosition();
                     final String sc = inputSc.getText().toString();
                     final String nama = inputNama.getText().toString();
                     final String alamat = inputAlamat.getText().toString();
@@ -280,6 +296,7 @@ public class ListOrderGangguan extends AppCompatActivity {
                     final String ncli = inputNcli.getText().toString();
                     final String ndem = inputNdem.getText().toString();
                     final String alproname = inputAlproname.getText().toString();
+                    final String namaTeam = inputTeamName.getItemAtPosition(posisi_E1).toString();
                     final String gruporder = spin.getItemAtPosition(post).toString();
 
                     if (!TextUtils.isEmpty(sc)
@@ -298,7 +315,9 @@ public class ListOrderGangguan extends AppCompatActivity {
                         new_user.put("ncli", ncli);
                         new_user.put("ndem", ndem);
                         new_user.put("Alproname", alproname);
-                        new_user.put("team", gruporder);
+                        new_user.put("jenis", gruporder);
+                        new_user.put("team", namaTeam);
+                        new_user.put("status", "belum");
                         // table dot primary dot isi
                         mFireStore.collection("order").document(sc).set(new_user)
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {

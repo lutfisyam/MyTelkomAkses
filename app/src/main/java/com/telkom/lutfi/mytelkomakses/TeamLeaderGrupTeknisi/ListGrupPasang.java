@@ -1,4 +1,4 @@
-package com.telkom.lutfi.mytelkomakses;
+package com.telkom.lutfi.mytelkomakses.TeamLeaderGrupTeknisi;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -31,13 +31,15 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.telkom.lutfi.mytelkomakses.entitas.Team;
+import com.telkom.lutfi.mytelkomakses.R;
+import com.telkom.lutfi.mytelkomakses.TeamLeaderTeknisi.TeknisiMenuActivity;
+import com.telkom.lutfi.mytelkomakses.TeknisiActivity;
+import com.telkom.lutfi.mytelkomakses.model.Team;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -137,12 +139,12 @@ public class ListGrupPasang extends AppCompatActivity {
 
         switch (id){
             case R.id.grupTeknisipb:
-                Intent i = new Intent (getApplicationContext(),ListGrupPasang.class);
+                Intent i = new Intent (getApplicationContext(),TeknisiMenuActivity.class);
                 startActivity(i);
                 super.onBackPressed();
                 break;
             case R.id.grupTeknisigangguan:
-                Intent I = new Intent (getApplicationContext(),ListGrupGangguan.class);
+                Intent I = new Intent (getApplicationContext(),MenuGrupTeknisi.class);
                 startActivity(I);
                 super.onBackPressed();
                 break;

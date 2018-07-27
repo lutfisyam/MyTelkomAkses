@@ -11,6 +11,11 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.telkom.lutfi.mytelkomakses.TeamLeaderGrupTeknisi.MenuGrupTeknisi;
+import com.telkom.lutfi.mytelkomakses.TeamLeaderOrderTeknisi.ListOrder;
+import com.telkom.lutfi.mytelkomakses.TeamLeaderOrderTeknisi.ListOrderPasangBaru;
+import com.telkom.lutfi.mytelkomakses.TeamLeaderOrderTeknisi.MenuOrderTeknisi;
+import com.telkom.lutfi.mytelkomakses.TeamLeaderTeknisi.TeknisiMenuActivity;
 
 public class TeamLeaderActivity extends AppCompatActivity {
 
@@ -57,7 +62,7 @@ public class TeamLeaderActivity extends AppCompatActivity {
         Order.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(TeamLeaderActivity.this, ListOrder.class);
+                Intent intent = new Intent(TeamLeaderActivity.this, MenuGrupTeknisi.class);
                 startActivity(intent);
             }
         });

@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "552368109820-6u7cfaapti8g3c5pgk9pu2pkhgrelco8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.telkom.lutfi.mytelkomakses",
+            "certificate_hash": "c2446016f9eeb138d27bec290d563190859983b7"
+          }
+        },
+        {
           "client_id": "552368109820-old52e5fm33gjk8tusuudufbl5g7kiqn.apps.googleusercontent.com",
           "client_type": 3
         }

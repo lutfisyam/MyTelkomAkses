@@ -5,11 +5,13 @@
     <item
         android:id="@+id/grupTeknisipb"
         android:title="@string/gruppasang"
-        app:showAsAction="never"/>
+        android:icon="@drawable/ic_person"
+        app:showAsAction="always"/>
     <item
         android:id="@+id/grupTeknisigangguan"
         android:title="@string/grupgangguan"
-        app:showAsAction="never"/>
+        android:icon="@drawable/ic_grup"
+        app:showAsAction="always"/>
     <item
         android:id="@+id/logout"
         android:title="@string/logout"
