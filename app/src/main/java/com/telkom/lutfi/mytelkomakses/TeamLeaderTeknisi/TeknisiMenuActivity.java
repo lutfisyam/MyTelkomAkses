@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.TabHost;
+import android.widget.TextView;
 
 import com.telkom.lutfi.mytelkomakses.R;
 import com.telkom.lutfi.mytelkomakses.TeamLeaderGrupTeknisi.ListGrupGangguan;
@@ -13,25 +14,30 @@ import com.telkom.lutfi.mytelkomakses.TeamLeaderGrupTeknisi.ListGrupPasang;
 
 public class TeknisiMenuActivity extends TabActivity {
 
-        TabHost tabhost;
+    TabHost tabhost;
 
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_teknisi_menu);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_teknisi_menu);
 
-            tabhost = (TabHost)findViewById(android.R.id.tabhost);
+        tabhost = (TabHost) findViewById(android.R.id.tabhost);
 
-            TabHost.TabSpec spec;
-            Intent intent;
+        TabHost.TabSpec spec;
+        Intent intent;
 
-            intent = new Intent().setClass(this, ListTeknisiPasangBaru.class);
-            spec = tabhost.newTabSpec("pasang").setIndicator("Pasang Baru",null).setContent(intent);
-            tabhost.addTab(spec);
+        intent = new Intent().setClass(this, ListTeknisiPasangBaru.class);
+        spec = tabhost.newTabSpec("pasang").setIndicator("Pasang Baru", null).setContent(intent);
+        tabhost.addTab(spec);
 
-            intent = new Intent().setClass(this, ListTeknisiGangguan.class);
-            spec = tabhost.newTabSpec("gangguan").setIndicator("Gangguan",null).setContent(intent);
-            tabhost.addTab(spec);
+        intent = new Intent().setClass(this, ListTeknisiGangguan.class);
+        spec = tabhost.newTabSpec("gangguan").setIndicator("Gangguan", null).setContent(intent);
+        tabhost.addTab(spec);
+
+        for (int i = 0; i < tabhost.getTabWidget().getChildCount(); i++) {
+            TextView textView = tabhost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
+            textView.setTextColor(getResources().getColor(R.color.colorWhite));
+        }
 
 
 //        btnNext.setOnClickListener(new View.OnClickListener() {
@@ -40,8 +46,7 @@ public class TeknisiMenuActivity extends TabActivity {
 //                Dialog("kon");
 //            }
 //        });
-        }
-
+    }
 
 
 //    @Override
@@ -65,5 +70,5 @@ public class TeknisiMenuActivity extends TabActivity {
 //            }
 //        });
 
-    }
+}
 

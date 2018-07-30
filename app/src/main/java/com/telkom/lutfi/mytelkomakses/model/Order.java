@@ -12,12 +12,14 @@ public class Order {
     private String team;
     private String status;
     private String bukti;
-
+    private String jenis_gangguan;
+    private String no_tiket;
+    private String no_internet;
 
     public Order() {
     }
 
-    public Order(String sc, String nama, String alamat, String kontak, String jenis, String ncli, String ndem, String alproname, String team, String status, String bukti) {
+    public Order(String sc, String nama, String alamat, String kontak, String jenis, String ncli, String ndem, String alproname, String team, String status, String bukti, String jenis_gangguan, String no_tiket, String no_internet) {
         this.sc = sc;
         this.nama = nama;
         this.alamat = alamat;
@@ -25,10 +27,39 @@ public class Order {
         this.jenis = jenis;
         this.ncli = ncli;
         this.ndem = ndem;
-        Alproname = alproname;
+        this.Alproname = alproname;
         this.team = team;
         this.status = status;
         this.bukti = bukti;
+        this.jenis_gangguan = jenis_gangguan;
+        this.no_tiket = no_tiket;
+        this.no_internet = no_internet;
+    }
+
+
+
+    public String getJenis_gangguan() {
+        return jenis_gangguan;
+    }
+
+    public void setJenis_gangguan(String jenis_gangguan) {
+        this.jenis_gangguan = jenis_gangguan;
+    }
+
+    public String getNo_tiket() {
+        return no_tiket;
+    }
+
+    public void setNo_tiket(String no_tiket) {
+        this.no_tiket = no_tiket;
+    }
+
+    public String getNo_internet() {
+        return no_internet;
+    }
+
+    public void setNo_internet(String no_internet) {
+        this.no_internet = no_internet;
     }
 
     public String getStatus() {

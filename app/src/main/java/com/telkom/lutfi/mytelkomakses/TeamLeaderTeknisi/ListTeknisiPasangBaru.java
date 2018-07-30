@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,6 +40,7 @@ import com.telkom.lutfi.mytelkomakses.LoginActivity;
 import com.telkom.lutfi.mytelkomakses.R;
 import com.telkom.lutfi.mytelkomakses.TeamLeaderGrupTeknisi.MenuGrupTeknisi;
 import com.telkom.lutfi.mytelkomakses.TeknisiActivity;
+import com.telkom.lutfi.mytelkomakses.customs.CustomDialog;
 import com.telkom.lutfi.mytelkomakses.model.User;
 
 import java.util.ArrayList;
@@ -52,40 +54,50 @@ public class ListTeknisiPasangBaru extends AppCompatActivity {
     private FirestoreRecyclerAdapter adapter;
     private RecyclerView mRecyclerView;
 
+    private CustomDialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_layout);
-        Toolbar toolbar =(Toolbar)findViewById(R.id.app_bar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
+        toolbar.setTitle("List Pasang Baru");
 
         mAuth = FirebaseAuth.getInstance();
         mFireStore = FirebaseFirestore.getInstance();
 
+        dialog = new CustomDialog(ListTeknisiPasangBaru.this);
+
         mRecyclerView = (RecyclerView) findViewById(R.id.karyawan_list);
 
-        Query query = mFireStore.collection("user").whereEqualTo("jenis","teknisi_pasang_baru");
+        Query query = mFireStore.collection("user").whereEqualTo("jenis", "teknisi_pasang_baru");
 
         FirestoreRecyclerOptions<User> options = new FirestoreRecyclerOptions.Builder<User>()
                 .setQuery(query, User.class)
                 .build();
 
+
         adapter = new FirestoreRecyclerAdapter<User, ListTeknisiPasangBaru.UserViewHolder>(options) {
             @Override
             public void onBindViewHolder(ListTeknisiPasangBaru.UserViewHolder holder, int position, User model) {
-                String email_teknisi = model.getEmail();
-                String pass_teknisi = model.getPass();
-                String nama_teknisi = model.getNama();
                 final String id_teknisi = getSnapshots().getSnapshot(position).getId();
+                final String nip_teknisi = model.getNip();
+                final String nama_teknisi = model.getNama();
+                final String email_teknisi = model.getEmail();
+                final String pass_teknisi = model.getPass();
 
                 holder.setNama(nama_teknisi);
                 holder.setEmail(email_teknisi);
                 holder.deleteUser(email_teknisi, pass_teknisi, nama_teknisi, id_teknisi);
 
+                holder.updateUser(id_teknisi, nip_teknisi, nama_teknisi, email_teknisi, pass_teknisi);
+
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Toast.makeText(ListTeknisiPasangBaru.this, id_teknisi, Toast.LENGTH_LONG).show();
+//                        dialog.showEditTeknisi(id_teknisi, nip_teknisi, nama_teknisi, email_teknisi, pass_teknisi);
                     }
                 });
             }
@@ -119,23 +131,23 @@ public class ListTeknisiPasangBaru extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater =getMenuInflater();
+        MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id= item.getItemId();
+        int id = item.getItemId();
 
-        switch (id){
+        switch (id) {
             case R.id.grupTeknisipb:
-                Intent i = new Intent (getApplicationContext(),TeknisiMenuActivity.class);
+                Intent i = new Intent(getApplicationContext(), TeknisiMenuActivity.class);
                 startActivity(i);
                 super.onBackPressed();
                 break;
             case R.id.grupTeknisigangguan:
-                Intent I = new Intent (getApplicationContext(),MenuGrupTeknisi.class);
+                Intent I = new Intent(getApplicationContext(), MenuGrupTeknisi.class);
                 startActivity(I);
                 super.onBackPressed();
                 break;
@@ -156,16 +168,6 @@ public class ListTeknisiPasangBaru extends AppCompatActivity {
     }
 
 
-    private void ambilData(DocumentSnapshot documentSnapshot, ArrayList<String> team) {
-
-        {
-            team.clear();
-            String nama = documentSnapshot.getString("nama");
-            team.add(nama);
-        }
-
-    }
-
     private class UserViewHolder extends RecyclerView.ViewHolder {
         public UserViewHolder(View itemView) {
             super(itemView);
@@ -180,6 +182,16 @@ public class ListTeknisiPasangBaru extends AppCompatActivity {
         void setEmail(String email) {
             TextView textView = (TextView) itemView.findViewById(R.id.karyawan_email);
             textView.setText(email);
+        }
+
+        void updateUser(final String UID, final String nip, final String nama, final String email, final String pass) {
+            ImageView update = itemView.findViewById(R.id.edit_user);
+            update.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.showEditTeknisi(UID, nip, nama, email, pass);
+                }
+            });
         }
 
         void deleteUser(final String email, final String pass, final String nama, final String id) {
@@ -229,7 +241,6 @@ public class ListTeknisiPasangBaru extends AppCompatActivity {
         }
     }
 
-
     private class AddTeknisiDialog extends AlertDialog {
 
         protected AddTeknisiDialog(@NonNull Context context) {
@@ -272,6 +283,7 @@ public class ListTeknisiPasangBaru extends AppCompatActivity {
                                             new_user.put("email", email);
                                             new_user.put("pass", password);
                                             new_user.put("jenis", "teknisi_pasang_baru");
+                                            new_user.put("job", "belum");
 
                                             // table dot primary dot isi
                                             mFireStore.collection("user").document(newUid).set(new_user)

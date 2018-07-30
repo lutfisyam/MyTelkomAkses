@@ -88,7 +88,7 @@ public class InputReportTeknisiActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {     }
                         });
-                mFireStore.collection("order").document(sc).update("tanggalmulai", tanggal)
+                mFireStore.collection("order").document(sc).update("waktumulai", tanggal)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {     }

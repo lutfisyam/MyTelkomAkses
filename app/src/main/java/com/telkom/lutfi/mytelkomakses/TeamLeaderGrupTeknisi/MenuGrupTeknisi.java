@@ -4,6 +4,7 @@ import android.app.TabActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TabHost;
+import android.widget.TextView;
 
 import com.telkom.lutfi.mytelkomakses.R;
 import com.telkom.lutfi.mytelkomakses.TeamLeaderTeknisi.ListTeknisiGangguan;
@@ -29,5 +30,11 @@ public class MenuGrupTeknisi extends TabActivity {
         intent = new Intent().setClass(this, ListGrupGangguan.class);
         spec = tabhost.newTabSpec("gangguan").setIndicator("Grup Gangguan", null).setContent(intent);
         tabhost.addTab(spec);
+
+        for (int i = 0; i < tabhost.getTabWidget().getChildCount(); i++) {
+            TextView textView = tabhost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
+            textView.setTextColor(getResources().getColor(R.color.colorWhite));
+        }
+
     }
 }

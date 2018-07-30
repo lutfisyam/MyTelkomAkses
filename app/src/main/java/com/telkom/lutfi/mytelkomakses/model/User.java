@@ -10,17 +10,32 @@ public class User {
     private String jenis;
     private String email;
     private String pass;
+    private String count;
+    private Double latitude;
+    private Double longlitude;
 
     public User() {
     }
 
-    public User(String nip, String nama, String jenis, String email, String pass) {
+    public User(String nip, String nama, String jenis, String email, String pass, String count, Double latitude, Double longlitude) {
         this.nip = nip;
         this.nama = nama;
         this.jenis = jenis;
         this.email = email;
         this.pass = pass;
+        this.count = count;
+        this.latitude = latitude;
+        this.longlitude = longlitude;
     }
+
+    public String getCount() {
+        return count;
+    }
+
+    public void setCount(String count) {
+        this.count = count;
+    }
+
 
     public String getNip() {
         return nip;
@@ -60,5 +75,21 @@ public class User {
 
     public void setPass(String pass) {
         this.pass = pass;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLonglitude() {
+        return longlitude;
+    }
+
+    public void setLonglitude(Double longlitude) {
+        this.longlitude = longlitude;
     }
 }

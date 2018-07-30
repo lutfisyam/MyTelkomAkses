@@ -1,6 +1,8 @@
 package com.telkom.lutfi.mytelkomakses;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -8,8 +10,10 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -36,6 +40,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.telkom.lutfi.mytelkomakses.TeamLeaderGrupTeknisi.ListGrupGangguan;
 import com.telkom.lutfi.mytelkomakses.TeamLeaderGrupTeknisi.ListGrupPasang;
+import com.telkom.lutfi.mytelkomakses.customs.CustomDialog;
 import com.telkom.lutfi.mytelkomakses.model.Order;
 
 import java.util.ArrayList;
@@ -48,15 +53,20 @@ public class TeknisiActivity extends AppCompatActivity implements LocationListen
     private RecyclerView mRecyclerView;
     private LocationManager locationManager;
     private String provider;
+    private String Id_us;
+
+    private CustomDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_layout);
-        Toolbar toolbar =(Toolbar)findViewById(R.id.app_bar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
         Intent intent = getIntent();
+        dialog = new CustomDialog(TeknisiActivity.this);
 
+        Id_us = intent.getStringExtra("montu");
         String Id_user = intent.getStringExtra("montu");
         String Id_grup = intent.getStringExtra("nama_grup");
         Toast.makeText(TeknisiActivity.this, Id_user, Toast.LENGTH_LONG).show();
@@ -82,6 +92,7 @@ public class TeknisiActivity extends AppCompatActivity implements LocationListen
                 final String nama_grup = model.getNama();
                 final String almt = model.getAlamat();
                 final String kontak = model.getKontak();
+                final String jenis = model.getJenis();
                 final String id = getSnapshots().getSnapshot(position).getId();
 
                 holder.setNama_grup(nama_grup);
@@ -94,21 +105,44 @@ public class TeknisiActivity extends AppCompatActivity implements LocationListen
                     @Override
                     public void onClick(View v) {
 
-                        Intent intent = new Intent(getApplicationContext(),DetailGrupOrderActivity.class);
-                        intent.putExtra("sc", model.getSc());
-                        intent.putExtra("nama", model.getNama());
-                        intent.putExtra("alamat", model.getAlamat());
-                        intent.putExtra("kontak", model.getKontak());
-                        intent.putExtra("ncli", model.getNcli());
-                        intent.putExtra("ndem", model.getNdem());
-                        intent.putExtra("alproname", model.getAlproname());
-                        intent.putExtra("status", model.getStatus());
-                        intent.putExtra("bukti", model.getBukti());
-                        startActivity(intent);
-//                        Toast.makeText(ListDetailGrupPasangBaru.this, id, Toast.LENGTH_LONG).show();
+                        if (jenis.equals("Pasang Baru")) {
+                            Intent intent = new Intent(getApplicationContext(), DetailGrupOrderActivity.class);
+                            intent.putExtra("jenis", jenis);
+                            intent.putExtra("sc", model.getSc());
+                            intent.putExtra("nama", model.getNama());
+                            intent.putExtra("alamat", model.getAlamat());
+                            intent.putExtra("kontak", model.getKontak());
+                            intent.putExtra("ncli", model.getNcli());
+                            intent.putExtra("ndem", model.getNdem());
+                            intent.putExtra("alproname", model.getAlproname());
+                            intent.putExtra("status", model.getStatus());
+                            intent.putExtra("no_tiket", model.getNo_tiket());
+                            intent.putExtra("no_internet", model.getNo_internet());
+                            intent.putExtra("jenis_gangguan", model.getJenis_gangguan());
+                            intent.putExtra("bukti", model.getBukti());
+                            startActivity(intent);
+                        } else if (jenis.equals("Gangguan")) {
+                            Intent intent = new Intent(getApplicationContext(), DetailGrupOrderActivity.class);
+                            intent.putExtra("jenis", jenis);
+                            intent.putExtra("sc", model.getSc());
+                            intent.putExtra("nama", model.getNama());
+                            intent.putExtra("alamat", model.getAlamat());
+                            intent.putExtra("kontak", model.getKontak());
+                            intent.putExtra("ncli", model.getNcli());
+                            intent.putExtra("ndem", model.getNdem());
+                            intent.putExtra("alproname", model.getAlproname());
+                            intent.putExtra("status", model.getStatus());
+                            intent.putExtra("no_tiket", model.getNo_tiket());
+                            intent.putExtra("no_internet", model.getNo_internet());
+                            intent.putExtra("jenis_gangguan", model.getJenis_gangguan());
+                            intent.putExtra("bukti", model.getBukti());
+                            startActivity(intent);
+                        }
+
                     }
                 });
             }
+
             @Override
             public TeknisiActivity.TeamViewHolder onCreateViewHolder(ViewGroup group, int i) {
                 View view = LayoutInflater.from(group.getContext())
@@ -147,29 +181,44 @@ public class TeknisiActivity extends AppCompatActivity implements LocationListen
         } else {
             Toast.makeText(TeknisiActivity.this, "lokasi gakonok", Toast.LENGTH_LONG).show();
         }
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            checkLocationPermission();
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater =getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_teknis, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id= item.getItemId();
+        int id = item.getItemId();
 
-        switch (id){
-            case R.id.grupTeknisipb:
-                Intent i = new Intent (getApplicationContext(),ListGrupPasang.class);
-                startActivity(i);
-                super.onBackPressed();
-                break;
-            case R.id.grupTeknisigangguan:
-                Intent I = new Intent (getApplicationContext(),ListGrupGangguan.class);
-                startActivity(I);
-                super.onBackPressed();
+        switch (id) {
+
+            case R.id.gantipassword:
+                final ProgressDialog progressDialog = new ProgressDialog(TeknisiActivity.this);
+                progressDialog.setMessage("Loading");
+                progressDialog.show();
+                FirebaseFirestore.getInstance().collection("user").document(Id_us)
+                        .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            progressDialog.dismiss();
+                            DocumentSnapshot documentSnapshot = task.getResult();
+                            dialog.showEditTeknisi(Id_us, documentSnapshot.getString("nip"), documentSnapshot.getString("nama"),
+                                    documentSnapshot.getString("email"), documentSnapshot.getString("pass"));
+                        } else {
+                            progressDialog.dismiss();
+                            Toast.makeText(TeknisiActivity.this, "Gagal", Toast.LENGTH_LONG).show();
+                        }
+
+                    }
+                });
                 break;
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
@@ -202,6 +251,7 @@ public class TeknisiActivity extends AppCompatActivity implements LocationListen
         }
 
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -215,22 +265,31 @@ public class TeknisiActivity extends AppCompatActivity implements LocationListen
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        locationManager.requestLocationUpdates(provider, 400, 1, this);
+        locationManager.requestLocationUpdates(provider, 1000, 1, this);
     }
 
     /* Remove the locationlistener updates when Activity is paused */
     @Override
     protected void onPause() {
         super.onPause();
-        locationManager.removeUpdates( this);
+        locationManager.removeUpdates(this);
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        int lat = (int) (location.getLatitude());
-        int lng = (int) (location.getLongitude());
-        Toast.makeText(TeknisiActivity.this, String.valueOf(lat), Toast.LENGTH_LONG).show();
-        Toast.makeText(TeknisiActivity.this,String.valueOf(lng), Toast.LENGTH_LONG).show();
+        double lat = (double) (location.getLatitude());
+        double lng = (double) (location.getLongitude());
+
+
+        mFireStore.collection("user").document(Id_us).update("latitude", lat,
+                "longlitude", lng)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                    }
+                });
+//        Toast.makeText(TeknisiActivity.this, String.valueOf(lat), Toast.LENGTH_LONG).show();
+//        Toast.makeText(TeknisiActivity.this,String.valueOf(lng), Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -273,7 +332,8 @@ public class TeknisiActivity extends AppCompatActivity implements LocationListen
             textView.setText(email2);
         }
 
-        void deleteUser( final String nama, final String id) {
+
+        void deleteUser(final String nama, final String id) {
             ImageView button = (ImageView) itemView.findViewById(R.id.delete_grup);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -312,5 +372,28 @@ public class TeknisiActivity extends AppCompatActivity implements LocationListen
     }
 
 
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+
+    public boolean checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_LOCATION);
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_LOCATION);
+            }
+            return false;
+        } else {
+            return true;
+        }
+
+    }
 
 }

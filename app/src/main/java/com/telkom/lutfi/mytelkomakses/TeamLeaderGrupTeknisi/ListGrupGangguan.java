@@ -59,15 +59,15 @@ public class ListGrupGangguan extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_layout);
-        Toolbar toolbar =(Toolbar)findViewById(R.id.app_bar);
-        setSupportActionBar(toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
+        toolbar.setTitle("List Grup Gangguan");
 
         mAuth = FirebaseAuth.getInstance();
         mFireStore = FirebaseFirestore.getInstance();
 
         mRecyclerView = (RecyclerView) findViewById(R.id.karyawan_list);
 
-        Query query = mFireStore.collection("team").whereEqualTo("jenis","Gangguan");
+        Query query = mFireStore.collection("team").whereEqualTo("jenis", "Gangguan");
 
         FirestoreRecyclerOptions<Team> options = new FirestoreRecyclerOptions.Builder<Team>()
                 .setQuery(query, Team.class)
@@ -128,23 +128,23 @@ public class ListGrupGangguan extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater =getMenuInflater();
+        MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id= item.getItemId();
+        int id = item.getItemId();
 
-        switch (id){
+        switch (id) {
             case R.id.grupTeknisipb:
-                Intent i = new Intent (getApplicationContext(),TeknisiMenuActivity.class);
+                Intent i = new Intent(getApplicationContext(), TeknisiMenuActivity.class);
                 startActivity(i);
                 super.onBackPressed();
                 break;
             case R.id.grupTeknisigangguan:
-                Intent I = new Intent (getApplicationContext(),MenuGrupTeknisi.class);
+                Intent I = new Intent(getApplicationContext(), MenuGrupTeknisi.class);
                 startActivity(I);
                 super.onBackPressed();
                 break;
@@ -197,7 +197,7 @@ public class ListGrupGangguan extends AppCompatActivity {
             textView.setText(email2);
         }
 
-        void deleteUser( final String nama, final String id) {
+        void deleteUser(final String nama, final String id) {
             ImageView button = (ImageView) itemView.findViewById(R.id.delete_grup);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -257,13 +257,13 @@ public class ListGrupGangguan extends AppCompatActivity {
             final List<String> teamIdList = new ArrayList<>();
 
 //            adaptr=new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_spinner_item,R.array.Pekerjaan);
-            adaptr = ArrayAdapter.createFromResource(context,R.array.Pekerjaan,android.R.layout.simple_spinner_item);
+            adaptr = ArrayAdapter.createFromResource(context, R.array.Pekerjaan, android.R.layout.simple_spinner_item);
             adaptr.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spin.setAdapter(adaptr);
             spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    Toast.makeText(getBaseContext(),parent.getItemAtPosition(position)+ "selected",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(), parent.getItemAtPosition(position) + "selected", Toast.LENGTH_LONG).show();
                 }
 
                 @Override
@@ -272,7 +272,7 @@ public class ListGrupGangguan extends AppCompatActivity {
                 }
             });
 
-            FirebaseFirestore.getInstance().collection("user").whereEqualTo("jenis","teknisi_gangguan").get()
+            FirebaseFirestore.getInstance().collection("user").whereEqualTo("jenis", "teknisi_gangguan").get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -332,16 +332,18 @@ public class ListGrupGangguan extends AppCompatActivity {
 
 
                         Map<String, String> cok = new HashMap<>();
-                        cok.put("nama_grup",namagrup);
+                        cok.put("nama_grup", namagrup);
                         mFireStore.collection("user").document(idTeknisi1).update("nama_grup", namagrup)
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
-                                    public void onComplete(@NonNull Task<Void> task) {     }
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                    }
                                 });
                         mFireStore.collection("user").document(idTeknisi2).update("nama_grup", namagrup)
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
-                                    public void onComplete(@NonNull Task<Void> task) {     }
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                    }
                                 });
 
                         // table dot primary dot isi

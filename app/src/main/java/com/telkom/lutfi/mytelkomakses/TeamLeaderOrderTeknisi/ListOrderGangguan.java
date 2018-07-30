@@ -39,6 +39,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.telkom.lutfi.mytelkomakses.LoginActivity;
 import com.telkom.lutfi.mytelkomakses.R;
+import com.telkom.lutfi.mytelkomakses.model.Order;
 import com.telkom.lutfi.mytelkomakses.model.User;
 
 import java.util.ArrayList;
@@ -69,36 +70,37 @@ public class ListOrderGangguan extends AppCompatActivity {
 
         Query query = mFireStore.collection("order").whereEqualTo("jenis", "Gangguan");
 
-        FirestoreRecyclerOptions<User> options = new FirestoreRecyclerOptions.Builder<User>()
-                .setQuery(query, User.class)
+        FirestoreRecyclerOptions<Order> options = new FirestoreRecyclerOptions.Builder<Order>()
+                .setQuery(query, Order.class)
                 .build();
 
-        adapter = new FirestoreRecyclerAdapter<User, ListOrderGangguan.UserViewHolder>(options) {
+        adapter = new FirestoreRecyclerAdapter<Order, ListOrderGangguan.OrderViewHolder>(options) {
             @Override
-            public void onBindViewHolder(ListOrderGangguan.UserViewHolder holder, int position, User model) {
-                String email_karyawan = model.getEmail();
-                String pass_karyawan = model.getPass();
-                String nama_karyawan = model.getNama();
-                final String id_karyawan = getSnapshots().getSnapshot(position).getId();
+            public void onBindViewHolder(ListOrderGangguan.OrderViewHolder holder, int position, Order model) {
+                String alamat = model.getAlamat();
+                String kontak = model.getKontak();
+                String nama = model.getNama();
+                final String id_order = getSnapshots().getSnapshot(position).getId();
 
-                holder.setNama(nama_karyawan);
-                holder.setEmail(email_karyawan);
-                holder.deleteUser(email_karyawan, pass_karyawan, nama_karyawan, id_karyawan);
+                holder.setNama(nama);
+                holder.setAlamat(alamat);
+                holder.setKontak(kontak);
+                holder.deleteUser(nama, id_order);
 
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(ListOrderGangguan.this, id_karyawan, Toast.LENGTH_LONG).show();
+                        Toast.makeText(ListOrderGangguan.this, id_order, Toast.LENGTH_LONG).show();
                     }
                 });
             }
 
             @Override
-            public ListOrderGangguan.UserViewHolder onCreateViewHolder(ViewGroup group, int i) {
+            public ListOrderGangguan.OrderViewHolder onCreateViewHolder(ViewGroup group, int i) {
                 View view = LayoutInflater.from(group.getContext())
                         .inflate(R.layout.layout_list_name, group, false);
 
-                return new ListOrderGangguan.UserViewHolder(view);
+                return new ListOrderGangguan.OrderViewHolder(view);
             }
 
 
@@ -169,8 +171,8 @@ public class ListOrderGangguan extends AppCompatActivity {
 
     }
 
-    private class UserViewHolder extends RecyclerView.ViewHolder {
-        public UserViewHolder(View itemView) {
+    private class OrderViewHolder extends RecyclerView.ViewHolder {
+        public OrderViewHolder(View itemView) {
             super(itemView);
 
         }
@@ -180,39 +182,35 @@ public class ListOrderGangguan extends AppCompatActivity {
             textView.setText(nama);
         }
 
-        void setEmail(String email) {
+        void setAlamat(String email) {
             TextView textView = (TextView) itemView.findViewById(R.id.karyawan_email);
             textView.setText(email);
         }
 
-        void deleteUser(final String email, final String pass, final String nama, final String id) {
+        void setKontak(String email) {
+            TextView textView = (TextView) itemView.findViewById(R.id.karyawan_email);
+            textView.setText(email);
+        }
+
+
+        void deleteUser( final String nama, final String id) {
             ImageView button = (ImageView) itemView.findViewById(R.id.delete_karyawan);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(ListOrderGangguan.this);
-                    builder.setMessage("Apakah anda yakin ingin menghapus user" + nama);
+                    builder.setMessage("Apakah anda yakin ingin menghapus order" + nama);
                     builder.setPositiveButton("Iya", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            mAuth.signInWithEmailAndPassword(email, pass)
-                                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            mFireStore.collection("order").document(id).delete()
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
-                                        public void onComplete(@NonNull Task<AuthResult> task) {
+                                        public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
-                                                mFireStore.collection("user").document(id).delete()
-                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<Void> task) {
-                                                                if (task.isSuccessful()) {
-                                                                    Toast.makeText(ListOrderGangguan.this, "Berhasil", Toast.LENGTH_LONG).show();
-                                                                    finish();
-                                                                    Intent intent = new Intent(ListOrderGangguan.this, LoginActivity.class);
-                                                                    startActivity(intent);
-                                                                }
-                                                            }
-                                                        });
-                                                mAuth.getCurrentUser().delete();
+                                                Toast.makeText(ListOrderGangguan.this, "Berhasil", Toast.LENGTH_LONG).show();
+                                                finish();
+                                                startActivity(getIntent());
                                             }
                                         }
                                     });
@@ -241,13 +239,13 @@ public class ListOrderGangguan extends AppCompatActivity {
             LayoutInflater inflater = LayoutInflater.from(ListOrderGangguan.this);
             View addFormView = inflater.inflate(R.layout.create_order, null);
 
-            final EditText inputSc = (EditText) addFormView.findViewById(R.id.enter_sc);
-            final EditText inputNama = (EditText) addFormView.findViewById(R.id.enter_namapel);
-            final EditText inputAlamat = (EditText) addFormView.findViewById(R.id.enter_alamat);
-            final EditText inputKontak = (EditText) addFormView.findViewById(R.id.enter_kontak);
-            final EditText inputNcli = (EditText) addFormView.findViewById(R.id.enter_ncli);
-            final EditText inputNdem = (EditText) addFormView.findViewById(R.id.enter_ndem);
-            final EditText inputAlproname = (EditText) addFormView.findViewById(R.id.enter_alproname);
+            final EditText inputNotic = (EditText) addFormView.findViewById(R.id.enter_sc);
+            final EditText inputNapel = (EditText) addFormView.findViewById(R.id.enter_namapel);
+            final EditText inputLokasi = (EditText) addFormView.findViewById(R.id.enter_alamat);
+            final EditText inputTlpn = (EditText) addFormView.findViewById(R.id.enter_kontak);
+            final EditText inputNoin = (EditText) addFormView.findViewById(R.id.enter_ncli);
+            final EditText inputTgl = (EditText) addFormView.findViewById(R.id.enter_ndem);
+            final EditText inputjenisGG = (EditText) addFormView.findViewById(R.id.enter_alproname);
             final Spinner inputTeamName = (Spinner) addFormView.findViewById(R.id.enter_grupteamteknisi);
             spin = (Spinner) addFormView.findViewById(R.id.enter_gruporder);
 
@@ -289,37 +287,38 @@ public class ListOrderGangguan extends AppCompatActivity {
 
                     int post = spin.getSelectedItemPosition();
                     int posisi_E1 = inputTeamName.getSelectedItemPosition();
-                    final String sc = inputSc.getText().toString();
-                    final String nama = inputNama.getText().toString();
-                    final String alamat = inputAlamat.getText().toString();
-                    final String Kontak = inputKontak.getText().toString();
-                    final String ncli = inputNcli.getText().toString();
-                    final String ndem = inputNdem.getText().toString();
-                    final String alproname = inputAlproname.getText().toString();
+                    final String notiket = inputNotic.getText().toString();
+                    final String nama = inputNapel.getText().toString();
+                    final String lokasi = inputLokasi.getText().toString();
+                    final String tlpn = inputTlpn.getText().toString();
+                    final String nointernet = inputNoin.getText().toString();
+                    final String tgl = inputTgl.getText().toString();
+                    final String jenisgg = inputjenisGG.getText().toString();
                     final String namaTeam = inputTeamName.getItemAtPosition(posisi_E1).toString();
                     final String gruporder = spin.getItemAtPosition(post).toString();
 
-                    if (!TextUtils.isEmpty(sc)
+                    if (!TextUtils.isEmpty(notiket)
                             && !TextUtils.isEmpty(nama)
-                            && !TextUtils.isEmpty(alamat)
-                            && !TextUtils.isEmpty(ncli)
-                            && !TextUtils.isEmpty(ndem)
-                            && !TextUtils.isEmpty(alproname)
+                            && !TextUtils.isEmpty(lokasi)
+                            && !TextUtils.isEmpty(tlpn)
+                            && !TextUtils.isEmpty(nointernet)
+                            && !TextUtils.isEmpty(tgl)
+                            && !TextUtils.isEmpty(jenisgg)
                             ) {
 
                         Map<String, String> new_user = new HashMap<>();
-                        new_user.put("sc", sc);
+                        new_user.put("no_tiket", notiket);
                         new_user.put("nama", nama);
-                        new_user.put("alamat", alamat);
-                        new_user.put("kontak", Kontak);
-                        new_user.put("ncli", ncli);
-                        new_user.put("ndem", ndem);
-                        new_user.put("Alproname", alproname);
+                        new_user.put("alamat", lokasi);
+                        new_user.put("kontak", tlpn);
+                        new_user.put("no_internet", nointernet);
+                        new_user.put("tgl", tgl);
+                        new_user.put("jenis_gangguan", jenisgg);
                         new_user.put("jenis", gruporder);
                         new_user.put("team", namaTeam);
                         new_user.put("status", "belum");
                         // table dot primary dot isi
-                        mFireStore.collection("order").document(sc).set(new_user)
+                        mFireStore.collection("order").document().set(new_user)
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
@@ -338,13 +337,13 @@ public class ListOrderGangguan extends AppCompatActivity {
             reset.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    inputSc.getText().clear();
-                    inputNama.getText().clear();
-                    inputAlamat.getText().clear();
-                    inputKontak.getText().clear();
-                    inputNcli.getText().clear();
-                    inputNdem.getText().clear();
-                    inputAlproname.getText().clear();
+                    inputNotic.getText().clear();
+                    inputNapel.getText().clear();
+                    inputLokasi.getText().clear();
+                    inputTlpn.getText().clear();
+                    inputNoin.getText().clear();
+                    inputTgl.getText().clear();
+                    inputjenisGG.getText().clear();
                 }
             });
         }

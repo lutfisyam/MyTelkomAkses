@@ -58,6 +58,8 @@ public class ListTeknisiGangguan extends AppCompatActivity {
         setContentView(R.layout.activity_list_layout);
         Toolbar toolbar =(Toolbar)findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
+        toolbar.setTitle("List Gangguan");
+
 
         mAuth = FirebaseAuth.getInstance();
         mFireStore = FirebaseFirestore.getInstance();
@@ -155,16 +157,6 @@ public class ListTeknisiGangguan extends AppCompatActivity {
         adapter.stopListening();
     }
 
-
-    private void ambilData(DocumentSnapshot documentSnapshot, ArrayList<String> team) {
-
-        {
-            team.clear();
-            String nama = documentSnapshot.getString("nama");
-            team.add(nama);
-        }
-
-    }
 
     private class UserViewHolder extends RecyclerView.ViewHolder {
         public UserViewHolder(View itemView) {
@@ -272,6 +264,7 @@ public class ListTeknisiGangguan extends AppCompatActivity {
                                             new_user.put("email", email);
                                             new_user.put("pass", password);
                                             new_user.put("jenis", "teknisi_gangguan");
+                                            new_user.put("job", "belum");
 
                                             // table dot primary dot isi
                                             mFireStore.collection("user").document(newUid).set(new_user)

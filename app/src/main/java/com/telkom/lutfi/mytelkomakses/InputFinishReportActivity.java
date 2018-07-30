@@ -27,6 +27,10 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class InputFinishReportActivity extends AppCompatActivity {
@@ -36,7 +40,7 @@ public class InputFinishReportActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private StorageReference buktiStorageRef;
     private FirebaseStorage firebaseStorage;
-
+    private FirebaseFirestore mFireStore;
     private String SCid, bukti;
 
     @Override
@@ -80,12 +84,12 @@ public class InputFinishReportActivity extends AppCompatActivity {
         if (gambarURI != null) {
             uploadBtn.setEnabled(true);
             uploadBtn.setOnClickListener(new View.OnClickListener() {
+
                 @Override
                 public void onClick(View v) {
                     progressDialog.show();
                     progressDialog.setCancelable(false);
                     progressDialog.setCanceledOnTouchOutside(false);
-
                     buktiStorageRef.child(String.valueOf(SCid + ".jpg"));
                     buktiStorageRef.putFile(gambarURI).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -94,8 +98,12 @@ public class InputFinishReportActivity extends AppCompatActivity {
                                 buktiStorageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
                                     public void onSuccess(Uri uri) {
+                                        Map<String, Object> validMap = new HashMap<>();
+                                        validMap.put("bukti", uri.toString());
+                                        validMap.put("status", "selesai");
+                                        validMap.put("waktuselesai", new Date());
                                         FirebaseFirestore.getInstance().collection("order").document(SCid)
-                                                .update("bukti", uri.toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                .update(validMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
                                                 Toast.makeText(InputFinishReportActivity.this, "Upload Sukses", Toast.LENGTH_SHORT).show();

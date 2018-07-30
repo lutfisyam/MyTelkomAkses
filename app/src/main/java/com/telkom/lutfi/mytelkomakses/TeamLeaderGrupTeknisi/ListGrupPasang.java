@@ -38,7 +38,6 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.telkom.lutfi.mytelkomakses.R;
 import com.telkom.lutfi.mytelkomakses.TeamLeaderTeknisi.TeknisiMenuActivity;
-import com.telkom.lutfi.mytelkomakses.TeknisiActivity;
 import com.telkom.lutfi.mytelkomakses.model.Team;
 
 import java.util.ArrayList;
@@ -59,15 +58,16 @@ public class ListGrupPasang extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_layout);
-        Toolbar toolbar =(Toolbar)findViewById(R.id.app_bar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
+        toolbar.setTitle("List Grup Pasang Baru");
 
         mAuth = FirebaseAuth.getInstance();
         mFireStore = FirebaseFirestore.getInstance();
 
         mRecyclerView = (RecyclerView) findViewById(R.id.karyawan_list);
 
-        Query query = mFireStore.collection("team").whereEqualTo("jenis","Pasang Baru");
+        Query query = mFireStore.collection("team").whereEqualTo("jenis", "Pasang Baru");
 
         FirestoreRecyclerOptions<Team> options = new FirestoreRecyclerOptions.Builder<Team>()
                 .setQuery(query, Team.class)
@@ -80,6 +80,8 @@ public class ListGrupPasang extends AppCompatActivity {
                 String nama_grup = model.getNama_grup();
                 String emailTeknisi1 = model.getEmailTeknisi1();
                 String emailTeknisi2 = model.getEmailTeknisi2();
+                String idTeknisi1 = model.getIdTeknisi1();
+                String idTeknisi2 = model.getIdTeknisi2();
                 final String id = getSnapshots().getSnapshot(position).getId();
 
                 mFireStore.collection("user").document(emailTeknisi1);
@@ -87,7 +89,7 @@ public class ListGrupPasang extends AppCompatActivity {
                 holder.setNama_grup(nama_grup);
                 holder.setEmailtek1(emailTeknisi1);
                 holder.setEmailtek2(emailTeknisi2);
-                holder.deleteUser(nama_grup, id);
+                holder.deleteTeam(nama_grup, id, idTeknisi1, idTeknisi2);
 
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -128,23 +130,23 @@ public class ListGrupPasang extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater =getMenuInflater();
+        MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id= item.getItemId();
+        int id = item.getItemId();
 
-        switch (id){
+        switch (id) {
             case R.id.grupTeknisipb:
-                Intent i = new Intent (getApplicationContext(),TeknisiMenuActivity.class);
+                Intent i = new Intent(getApplicationContext(), TeknisiMenuActivity.class);
                 startActivity(i);
                 super.onBackPressed();
                 break;
             case R.id.grupTeknisigangguan:
-                Intent I = new Intent (getApplicationContext(),MenuGrupTeknisi.class);
+                Intent I = new Intent(getApplicationContext(), MenuGrupTeknisi.class);
                 startActivity(I);
                 super.onBackPressed();
                 break;
@@ -163,17 +165,6 @@ public class ListGrupPasang extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         adapter.stopListening();
-    }
-
-
-    private void ambilData(DocumentSnapshot documentSnapshot, ArrayList<String> team) {
-
-        {
-            team.clear();
-            String nama = documentSnapshot.getString("nama_grup");
-            team.add(nama);
-        }
-
     }
 
     private class TeamViewHolder extends RecyclerView.ViewHolder {
@@ -197,7 +188,7 @@ public class ListGrupPasang extends AppCompatActivity {
             textView.setText(email2);
         }
 
-        void deleteUser( final String nama, final String id) {
+        void deleteTeam(final String nama, final String id, final String idUser1, final String idUser2) {
             ImageView button = (ImageView) itemView.findViewById(R.id.delete_grup);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -207,6 +198,11 @@ public class ListGrupPasang extends AppCompatActivity {
                     builder.setPositiveButton("Iya", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            Map<String, Object> updateUser = new HashMap<>();
+                            updateUser.put("job", "ada");
+                            updateUser.put("nama_grup", "");
+                            mFireStore.collection("user").document(idUser1).update(updateUser);
+                            mFireStore.collection("user").document(idUser2).update(updateUser);
                             mFireStore.collection("team").document(id).delete()
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
@@ -256,13 +252,13 @@ public class ListGrupPasang extends AppCompatActivity {
             final List<String> teamList = new ArrayList<>();
             final List<String> teamIdList = new ArrayList<>();
 
-            adaptr = ArrayAdapter.createFromResource(context,R.array.Pekerjaan,android.R.layout.simple_spinner_item);
+            adaptr = ArrayAdapter.createFromResource(context, R.array.Pekerjaan, android.R.layout.simple_spinner_item);
             adaptr.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spin.setAdapter(adaptr);
             spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    Toast.makeText(getBaseContext(),parent.getItemAtPosition(position)+ "selected",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(), parent.getItemAtPosition(position) + "selected", Toast.LENGTH_LONG).show();
                 }
 
                 @Override
@@ -271,32 +267,34 @@ public class ListGrupPasang extends AppCompatActivity {
                 }
             });
 
-            FirebaseFirestore.getInstance().collection("user").whereEqualTo("jenis","teknisi_pasang_baru").get()
+            FirebaseFirestore.getInstance().collection("user").whereEqualTo("jenis", "teknisi_pasang_baru").get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
                                 for (DocumentSnapshot documentSnapshot : task.getResult()) {
-                                    teamList.add(documentSnapshot.getString("email"));
-                                    teamIdList.add(documentSnapshot.getId());
+                                    if (documentSnapshot.getString("job").equals("belum")) {
+                                        teamList.add(documentSnapshot.getString("email"));
+                                        teamIdList.add(documentSnapshot.getId());
 
-//                                    Toast.makeText(ListTeknisi.this, documentSnapshot.getString("nama"), Toast.LENGTH_LONG).show();
 
-                                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(ListGrupPasang.this, android.R.layout.simple_spinner_item, teamList);
-                                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                    inputTeknisi1.setAdapter(adapter);
+                                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(ListGrupPasang.this, android.R.layout.simple_spinner_item, teamList);
+                                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                        inputTeknisi1.setAdapter(adapter);
 
-                                    ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(ListGrupPasang.this, android.R.layout.simple_spinner_item, teamList);
-                                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                    inputTeknisi2.setAdapter(adapter1);
+                                        ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(ListGrupPasang.this, android.R.layout.simple_spinner_item, teamList);
+                                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                        inputTeknisi2.setAdapter(adapter1);
 
-                                    ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(ListGrupPasang.this, android.R.layout.simple_spinner_item, teamIdList);
-                                    adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                    inputTeamId1.setAdapter(adapter2);
+                                        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(ListGrupPasang.this, android.R.layout.simple_spinner_item, teamIdList);
+                                        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                        inputTeamId1.setAdapter(adapter2);
 
-                                    ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(ListGrupPasang.this, android.R.layout.simple_spinner_item, teamIdList);
-                                    adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                    inputTeamId2.setAdapter(adapter3);
+                                        ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(ListGrupPasang.this, android.R.layout.simple_spinner_item, teamIdList);
+                                        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                        inputTeamId2.setAdapter(adapter3);
+
+                                    }
                                 }
                             }
                         }
@@ -329,17 +327,20 @@ public class ListGrupPasang extends AppCompatActivity {
                         new_user.put("emailTeknisi2", namaEmail2);
                         new_user.put("jenis", gruporder);
 
-                        Map<String, String> cok = new HashMap<>();
-                        cok.put("nama_grup",namagrup);
-                        mFireStore.collection("user").document(idTeknisi1).update("nama_grup", namagrup)
+                        Map<String, Object> updateUser = new HashMap<>();
+                        updateUser.put("nama_grup", namagrup);
+                        updateUser.put("job", "ada");
+                        mFireStore.collection("user").document(idTeknisi1).update(updateUser)
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
-                                    public void onComplete(@NonNull Task<Void> task) {     }
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                    }
                                 });
-                        mFireStore.collection("user").document(idTeknisi2).update("nama_grup", namagrup)
+                        mFireStore.collection("user").document(idTeknisi2).update(updateUser)
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
-                                    public void onComplete(@NonNull Task<Void> task) {     }
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                    }
                                 });
                         // table dot primary dot isi
                         mFireStore.collection("team").document(namagrup).set(new_user)

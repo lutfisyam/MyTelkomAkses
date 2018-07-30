@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Update Akun"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="@color/colorBlack"
+        android:textSize="24sp"
+        android:textStyle="bold|italic" />
+
+    <EditText
+        android:id="@+id/updat_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/brown_border"
+        android:ems="10"
+        android:hint="Enter ID (NIP)"
+        android:inputType="text"
+        android:maxLines="1"
+        android:padding="17dp"
+        android:textColor="@color/colorBlack"
+        android:textColorHint="@color/cardview_dark_background"
+        android:textSize="17dp" />
+
+
+    <EditText
+        android:id="@+id/update_nama"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/brown_border"
+        android:ems="10"
+        android:hint="Enter Nama"
+        android:inputType="text"
+        android:maxLines="1"
+        android:padding="17dp"
+        android:textColor="@color/colorBlack"
+        android:textColorHint="@color/cardview_dark_background"
+        android:textSize="17dp" />
+
+    <EditText
+        android:id="@+id/update_Email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/brown_border"
+        android:ems="10"
+        android:hint="Enter Email"
+        android:inputType="text"
+        android:maxLines="1"
+        android:padding="17dp"
+        android:textColor="@color/colorBlack"
+        android:textColorHint="@color/cardview_dark_background"
+        android:textSize="17dp" />
+
+    <EditText
+        android:id="@+id/update_Password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/brown_border"
+        android:ems="10"
+        android:hint="Enter Password"
+        android:inputType="textPassword"
+        android:maxLines="1"
+        android:padding="17dp"
+        android:textColor="@color/colorBlack"
+        android:textColorHint="@color/cardview_dark_background"
+        android:textSize="17dp" />
+
+    <Button
+        android:id="@+id/btn_simpan_teknisi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:text="SIMPAN" />
+
+    <Button
+        android:id="@+id/btn_reset_teknisi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:text="RESET" />
+
+</LinearLayout>

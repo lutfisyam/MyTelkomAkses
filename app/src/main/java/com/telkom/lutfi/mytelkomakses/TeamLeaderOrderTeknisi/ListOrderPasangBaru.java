@@ -39,6 +39,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.telkom.lutfi.mytelkomakses.LoginActivity;
 import com.telkom.lutfi.mytelkomakses.R;
+import com.telkom.lutfi.mytelkomakses.model.Order;
 import com.telkom.lutfi.mytelkomakses.model.User;
 
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ public class ListOrderPasangBaru extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_layout);
-        Toolbar toolbar =(Toolbar)findViewById(R.id.app_bar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
 
 
@@ -69,26 +70,27 @@ public class ListOrderPasangBaru extends AppCompatActivity {
 
         Query query = mFireStore.collection("order").whereEqualTo("jenis", "Pasang Baru");
 
-        FirestoreRecyclerOptions<User> options = new FirestoreRecyclerOptions.Builder<User>()
-                .setQuery(query, User.class)
+        FirestoreRecyclerOptions<Order> options = new FirestoreRecyclerOptions.Builder<Order>()
+                .setQuery(query, Order.class)
                 .build();
 
-        adapter = new FirestoreRecyclerAdapter<User, ListOrderPasangBaru.UserViewHolder>(options) {
+        adapter = new FirestoreRecyclerAdapter<Order, ListOrderPasangBaru.UserViewHolder>(options) {
             @Override
-            public void onBindViewHolder(ListOrderPasangBaru.UserViewHolder holder, int position, User model) {
-                String email_karyawan = model.getEmail();
-                String pass_karyawan = model.getPass();
-                String nama_karyawan = model.getNama();
-                final String id_karyawan = getSnapshots().getSnapshot(position).getId();
+            public void onBindViewHolder(ListOrderPasangBaru.UserViewHolder holder, int position, Order model) {
+                String alamat = model.getAlamat();
+                String kontak = model.getKontak();
+                String nama = model.getNama();
+                final String id_order = getSnapshots().getSnapshot(position).getId();
 
-                holder.setNama(nama_karyawan);
-                holder.setEmail(email_karyawan);
-                holder.deleteUser(email_karyawan, pass_karyawan, nama_karyawan, id_karyawan);
+                holder.setNama(nama);
+                holder.setAlamat(alamat);
+                holder.setKontak(kontak);
+                holder.deleteUser(nama, id_order);
 
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(ListOrderPasangBaru.this, id_karyawan, Toast.LENGTH_LONG).show();
+                        Toast.makeText(ListOrderPasangBaru.this, id_order, Toast.LENGTH_LONG).show();
                     }
                 });
             }
@@ -96,7 +98,7 @@ public class ListOrderPasangBaru extends AppCompatActivity {
             @Override
             public ListOrderPasangBaru.UserViewHolder onCreateViewHolder(ViewGroup group, int i) {
                 View view = LayoutInflater.from(group.getContext())
-                        .inflate(R.layout.layout_list_name, group, false);
+                        .inflate(R.layout.layout_list_grup, group, false);
 
                 return new ListOrderPasangBaru.UserViewHolder(view);
             }
@@ -122,23 +124,23 @@ public class ListOrderPasangBaru extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater =getMenuInflater();
+        MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_order, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id= item.getItemId();
+        int id = item.getItemId();
 
-        switch (id){
+        switch (id) {
             case R.id.OrderGangguan:
-                Intent i = new Intent (getApplicationContext(),ListOrderGangguan.class);
+                Intent i = new Intent(getApplicationContext(), ListOrderGangguan.class);
                 startActivity(i);
                 super.onBackPressed();
                 break;
             case R.id.OrderPasang:
-                Intent I = new Intent (getApplicationContext(),ListOrderPasangBaru.class);
+                Intent I = new Intent(getApplicationContext(), ListOrderPasangBaru.class);
                 startActivity(I);
                 super.onBackPressed();
                 break;
@@ -158,17 +160,6 @@ public class ListOrderPasangBaru extends AppCompatActivity {
         adapter.stopListening();
     }
 
-
-    private void ambilData(DocumentSnapshot documentSnapshot, ArrayList<String> team) {
-
-        {
-            team.clear();
-            String nama = documentSnapshot.getString("nama");
-            team.add(nama);
-        }
-
-    }
-
     private class UserViewHolder extends RecyclerView.ViewHolder {
         public UserViewHolder(View itemView) {
             super(itemView);
@@ -176,43 +167,38 @@ public class ListOrderPasangBaru extends AppCompatActivity {
         }
 
         void setNama(String nama) {
-            TextView textView = (TextView) itemView.findViewById(R.id.karyawan_name);
+            TextView textView = (TextView) itemView.findViewById(R.id.namagrup);
             textView.setText(nama);
         }
 
-        void setEmail(String email) {
-            TextView textView = (TextView) itemView.findViewById(R.id.karyawan_email);
-            textView.setText(email);
+        void setAlamat(String email1) {
+            TextView textView = (TextView) itemView.findViewById(R.id.emailteknisi1);
+            textView.setText(email1);
         }
 
-        void deleteUser(final String email, final String pass, final String nama, final String id) {
-            ImageView button = (ImageView) itemView.findViewById(R.id.delete_karyawan);
+        void setKontak(String email2) {
+            TextView textView = (TextView) itemView.findViewById(R.id.emailteknisi2);
+            textView.setText(email2);
+        }
+
+        void deleteUser( final String nama, final String id) {
+            ImageView button = (ImageView) itemView.findViewById(R.id.delete_grup);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(ListOrderPasangBaru.this);
-                    builder.setMessage("Apakah anda yakin ingin menghapus user" + nama);
+                    builder.setMessage("Apakah anda yakin ingin menghapus order" + nama);
                     builder.setPositiveButton("Iya", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            mAuth.signInWithEmailAndPassword(email, pass)
-                                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            mFireStore.collection("order").document(id).delete()
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
-                                        public void onComplete(@NonNull Task<AuthResult> task) {
+                                        public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
-                                                mFireStore.collection("user").document(id).delete()
-                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<Void> task) {
-                                                                if (task.isSuccessful()) {
-                                                                    Toast.makeText(ListOrderPasangBaru.this, "Berhasil", Toast.LENGTH_LONG).show();
-                                                                    finish();
-                                                                    Intent intent = new Intent(ListOrderPasangBaru.this, LoginActivity.class);
-                                                                    startActivity(intent);
-                                                                }
-                                                            }
-                                                        });
-                                                mAuth.getCurrentUser().delete();
+                                                Toast.makeText(ListOrderPasangBaru.this, "Berhasil", Toast.LENGTH_LONG).show();
+                                                finish();
+                                                startActivity(getIntent());
                                             }
                                         }
                                     });
@@ -253,7 +239,7 @@ public class ListOrderPasangBaru extends AppCompatActivity {
 
             final List<String> teamList = new ArrayList<>();
 
-            adaptr = ArrayAdapter.createFromResource(context,R.array.Pekerjaan,android.R.layout.simple_spinner_item);
+            adaptr = ArrayAdapter.createFromResource(context, R.array.Pekerjaan, android.R.layout.simple_spinner_item);
             adaptr.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spin.setAdapter(adaptr);
 
@@ -329,7 +315,7 @@ public class ListOrderPasangBaru extends AppCompatActivity {
                                         }
                                     }
                                 });
-                    }   else {
+                    } else {
                         Toast.makeText(ListOrderPasangBaru.this, "Tolong lenkgapi form", Toast.LENGTH_LONG).show();
                     }
                 }

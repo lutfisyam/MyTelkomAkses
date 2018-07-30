@@ -56,7 +56,7 @@ public class ListOrder extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_layout);
-        Toolbar toolbar =(Toolbar)findViewById(R.id.app_bar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
 
 
@@ -87,7 +87,7 @@ public class ListOrder extends AppCompatActivity {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(getApplicationContext(),DetailGrupOrderActivity.class);
+                        Intent intent = new Intent(getApplicationContext(), DetailGrupOrderActivity.class);
                         intent.putExtra("sc", model.getSc());
                         intent.putExtra("nama", model.getNama());
                         intent.putExtra("alamat", model.getAlamat());
@@ -129,23 +129,23 @@ public class ListOrder extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater =getMenuInflater();
+        MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_order, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id= item.getItemId();
+        int id = item.getItemId();
 
-        switch (id){
+        switch (id) {
             case R.id.OrderGangguan:
-                Intent in = new Intent (getApplicationContext(),ListOrderGangguan.class);
+                Intent in = new Intent(getApplicationContext(), ListOrderGangguan.class);
                 startActivity(in);
                 super.onBackPressed();
                 break;
             case R.id.OrderPasang:
-                Intent I = new Intent (getApplicationContext(),ListOrderPasangBaru.class);
+                Intent I = new Intent(getApplicationContext(), ListOrderPasangBaru.class);
                 startActivity(I);
                 super.onBackPressed();
                 break;
@@ -197,32 +197,32 @@ public class ListOrder extends AppCompatActivity {
             textView.setText(email2);
         }
 
-        void deleteUser( final String nama, final String id) {
-                        ImageView button = (ImageView) itemView.findViewById(R.id.delete_grup);
-                        button.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(ListOrder.this);
-                                builder.setMessage("Apakah anda yakin ingin menghapus user" + nama);
-                                builder.setPositiveButton("Iya", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        mFireStore.collection("order").document(id).delete()
-                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<Void> task) {
-                                                        if (task.isSuccessful()) {
-                                                            Toast.makeText(ListOrder.this, "Berhasil", Toast.LENGTH_LONG).show();
-                                                            finish();
-                                                            Intent intent = new Intent(ListOrder.this, ListOrder.class);
-                                                            startActivity(intent);
-                                                        }
-                                                    }
-                                                });
+        void deleteUser(final String nama, final String id) {
+            ImageView button = (ImageView) itemView.findViewById(R.id.delete_grup);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ListOrder.this);
+                    builder.setMessage("Apakah anda yakin ingin menghapus user" + nama);
+                    builder.setPositiveButton("Iya", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mFireStore.collection("order").document(id).delete()
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Toast.makeText(ListOrder.this, "Berhasil", Toast.LENGTH_LONG).show();
+                                                finish();
+                                                Intent intent = new Intent(ListOrder.this, ListOrder.class);
+                                                startActivity(intent);
+                                            }
+                                        }
+                                    });
 
 
-                                    }
-                                });
+                        }
+                    });
 
                     builder.setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
                         @Override
@@ -259,7 +259,7 @@ public class ListOrder extends AppCompatActivity {
             final List<String> teamList = new ArrayList<>();
 //            final List<String> teamIdList = new ArrayList<>();
 
-            adaptr = ArrayAdapter.createFromResource(context,R.array.Pekerjaan,android.R.layout.simple_spinner_item);
+            adaptr = ArrayAdapter.createFromResource(context, R.array.Pekerjaan, android.R.layout.simple_spinner_item);
             adaptr.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spin.setAdapter(adaptr);
 //
@@ -325,18 +325,18 @@ public class ListOrder extends AppCompatActivity {
                         new_user.put("jenis", gruporder);
                         new_user.put("team", namaTeam);
                         new_user.put("status", "belum");
-                            // table dot primary dot isi
-                            mFireStore.collection("order").document(sc).set(new_user)
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()) {
-                                                Toast.makeText(ListOrder.this, "Berhasil menambahkan", Toast.LENGTH_LONG).show();
-                                                dismiss();
-                                            }
+                        // table dot primary dot isi
+                        mFireStore.collection("order").document(sc).set(new_user)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Toast.makeText(ListOrder.this, "Berhasil menambahkan", Toast.LENGTH_LONG).show();
+                                            dismiss();
                                         }
-                                    });
-                        }   else {
+                                    }
+                                });
+                    } else {
                         Toast.makeText(ListOrder.this, "Tolong lenkgapi form", Toast.LENGTH_LONG).show();
                     }
                 }
