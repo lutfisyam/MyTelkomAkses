@@ -67,10 +67,8 @@ public class TeknisiActivity extends AppCompatActivity implements LocationListen
         dialog = new CustomDialog(TeknisiActivity.this);
 
         Id_us = intent.getStringExtra("montu");
-        String Id_user = intent.getStringExtra("montu");
         String Id_grup = intent.getStringExtra("nama_grup");
-        Toast.makeText(TeknisiActivity.this, Id_user, Toast.LENGTH_LONG).show();
-        Toast.makeText(TeknisiActivity.this, Id_grup, Toast.LENGTH_LONG).show();
+
         mAuth = FirebaseAuth.getInstance();
         mFireStore = FirebaseFirestore.getInstance();
 
@@ -242,15 +240,6 @@ public class TeknisiActivity extends AppCompatActivity implements LocationListen
     }
 
 
-    private void ambilData(DocumentSnapshot documentSnapshot, ArrayList<String> team) {
-
-        {
-            team.clear();
-            String nama = documentSnapshot.getString("nama_grup");
-            team.add(nama);
-        }
-
-    }
 
     @Override
     protected void onResume() {

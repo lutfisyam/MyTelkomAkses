@@ -48,10 +48,10 @@ public class InputFinishReportActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input_finish_report);
 
-        SCid = getIntent().getStringExtra("OTNIEL_KONTOL");
+        SCid = getIntent().getStringExtra("scid");
 
         firebaseStorage = FirebaseStorage.getInstance();
-        buktiStorageRef = firebaseStorage.getReference().child("bukti");
+        buktiStorageRef = firebaseStorage.getReference().child(SCid);
         Button btn = (Button) findViewById(R.id.opencamera);
         uploadBtn = (Button) findViewById(R.id.upload_butki_btn);
         img = (ImageView) findViewById(R.id.photoImage);

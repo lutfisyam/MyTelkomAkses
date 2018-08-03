@@ -36,7 +36,6 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        cobaExport();
 
         mAuth = FirebaseAuth.getInstance();
         final String currentUID = mAuth.getCurrentUser().getUid(); // Mengambil id telogin
@@ -95,53 +94,6 @@ public class HomeActivity extends AppCompatActivity {
                 intent.putExtra("montu", currentUID);
                 intent.putExtra("nama_grup", namagrup[0]);
                 startActivity(intent);
-            }
-        });
-    }
-
-    private void cobaExport() {
-        Button button = findViewById(R.id.cobaexport);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String baseDir = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
-                String fileName = "AnalysisData.xlsx";
-                String filePath = baseDir + File.separator + fileName;
-                File file = new File(filePath);
-                CSVWriter writer = null;
-                // File exist
-//                if (file.exists() && !file.isDirectory()) {
-//                    try {
-//                        FileWriter fileWriter = new FileWriter(filePath, true);
-//                        writer = new CSVWriter(fileWriter);
-//                        String[] data = {"Halo1", "Halo2", "Halo3", "Halo4"};
-//                        writer.writeNext(data);
-//                        writer.close();
-//                        Log.d("COBA EKSPOR", "BASE DIR : " + baseDir);
-//                        Log.d("COBA EKSPOR", "fileName : " + fileName);
-//                        Log.d("COBA EKSPOR", "filePath : " + filePath);
-//                        Log.d("COBA EKSPOR", "file : " + file);
-//                        Log.d("COBA EKSPOR", "fileWriter : " + fileWriter);
-//                        Log.d("COBA EKSPOR", "writer : " + writer);
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-
-//                } else {
-                    try {
-                        writer = new CSVWriter(new FileWriter(filePath));
-                        String[] data = {"Halo1", "Halo2", "Halo3", "Halo4"};
-                        writer.writeNext(data);
-                        writer.close();
-                        Log.d("COBA EKSPOR", "BASE DIR : " + baseDir);
-                        Log.d("COBA EKSPOR", "fileName : " + fileName);
-                        Log.d("COBA EKSPOR", "filePath : " + filePath);
-                        Log.d("COBA EKSPOR", "file : " + file);
-                        Log.d("COBA EKSPOR", "writer : " + writer);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-//                }
             }
         });
     }

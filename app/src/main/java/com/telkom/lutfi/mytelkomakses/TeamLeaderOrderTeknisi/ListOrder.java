@@ -139,16 +139,16 @@ public class ListOrder extends AppCompatActivity {
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.OrderGangguan:
-                Intent in = new Intent(getApplicationContext(), ListOrderGangguan.class);
-                startActivity(in);
-                super.onBackPressed();
-                break;
-            case R.id.OrderPasang:
-                Intent I = new Intent(getApplicationContext(), ListOrderPasangBaru.class);
-                startActivity(I);
-                super.onBackPressed();
-                break;
+//            case R.id.OrderGangguan:
+//                Intent in = new Intent(getApplicationContext(), ListOrderGangguan.class);
+//                startActivity(in);
+//                super.onBackPressed();
+//                break;
+//            case R.id.OrderPasang:
+//                Intent I = new Intent(getApplicationContext(), ListOrderPasangBaru.class);
+//                startActivity(I);
+//                super.onBackPressed();
+//                break;
         }
         return super.onOptionsItemSelected(item);
     }

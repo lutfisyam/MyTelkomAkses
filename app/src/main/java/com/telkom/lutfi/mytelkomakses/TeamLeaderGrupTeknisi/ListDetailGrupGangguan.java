@@ -30,6 +30,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.telkom.lutfi.mytelkomakses.DetailGrupOrderActivity;
+import com.telkom.lutfi.mytelkomakses.DetailOrderLayoutTL;
 import com.telkom.lutfi.mytelkomakses.R;
 import com.telkom.lutfi.mytelkomakses.model.Order;
 
@@ -77,17 +78,19 @@ public class ListDetailGrupGangguan extends AppCompatActivity {
                 final String nama_grup = model.getNama();
                 final String almt = model.getAlamat();
                 final String kontak = model.getKontak();
+                final  String status = model.getStatus();
                 final String id = getSnapshots().getSnapshot(position).getId();
 
                 holder.setNama_grup(nama_grup);
                 holder.setEmailtek1(almt);
                 holder.setEmailtek2(kontak);
+                holder.setStatus(status);
                 holder.deleteUser(nama_grup, id);
 
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(getApplicationContext(),DetailGrupOrderActivity.class);
+                        Intent intent = new Intent(getApplicationContext(),DetailOrderLayoutTL.class);
                         intent.putExtra("sc", model.getSc());
                         intent.putExtra("nama", model.getNama());
                         intent.putExtra("alamat", model.getAlamat());
@@ -103,7 +106,7 @@ public class ListDetailGrupGangguan extends AppCompatActivity {
             @Override
             public ListDetailGrupGangguan.TeamViewHolder onCreateViewHolder(ViewGroup group, int i) {
                 View view = LayoutInflater.from(group.getContext())
-                        .inflate(R.layout.layout_list_grup, group, false);
+                        .inflate(R.layout.layout_order_indicator, group, false);
 
                 return new ListDetailGrupGangguan.TeamViewHolder(view);
             }
@@ -126,16 +129,16 @@ public class ListDetailGrupGangguan extends AppCompatActivity {
         int id= item.getItemId();
 
         switch (id){
-            case R.id.grupTeknisipb:
-                Intent i = new Intent (getApplicationContext(),ListGrupPasang.class);
-                startActivity(i);
-                super.onBackPressed();
-                break;
-            case R.id.grupTeknisigangguan:
-                Intent I = new Intent (getApplicationContext(),ListGrupGangguan.class);
-                startActivity(I);
-                super.onBackPressed();
-                break;
+//            case R.id.grupTeknisipb:
+//                Intent i = new Intent (getApplicationContext(),ListGrupPasang.class);
+//                startActivity(i);
+//                super.onBackPressed();
+//                break;
+//            case R.id.grupTeknisigangguan:
+//                Intent I = new Intent (getApplicationContext(),ListGrupGangguan.class);
+//                startActivity(I);
+//                super.onBackPressed();
+//                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -154,20 +157,32 @@ public class ListDetailGrupGangguan extends AppCompatActivity {
     }
 
 
-    private void ambilData(DocumentSnapshot documentSnapshot, ArrayList<String> team) {
-
-        {
-            team.clear();
-            String nama = documentSnapshot.getString("nama_grup");
-            team.add(nama);
-        }
-
-    }
 
     private class TeamViewHolder extends RecyclerView.ViewHolder {
         public TeamViewHolder(View itemView) {
             super(itemView);
 
+        }
+
+        void setStatus(String status) {
+            ImageView imageView1 = (ImageView) itemView.findViewById(R.id.in_belum);
+            ImageView imageView2 = (ImageView) itemView.findViewById(R.id.in_proses);
+            ImageView imageView3 = (ImageView) itemView.findViewById(R.id.in_selesai);
+            if(status.equals("belum")) {
+                imageView1.setVisibility(View.VISIBLE);
+                imageView2.setVisibility(View.GONE);
+                imageView3.setVisibility(View.GONE);
+            } else if (status.equals("proses")) {
+
+                imageView1.setVisibility(View.GONE);
+                imageView2.setVisibility(View.VISIBLE);
+                imageView3.setVisibility(View.GONE);
+            } else {
+
+                imageView1.setVisibility(View.GONE);
+                imageView2.setVisibility(View.GONE);
+                imageView3.setVisibility(View.VISIBLE);
+            }
         }
 
         void setNama_grup(String nama) {

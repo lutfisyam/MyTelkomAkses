@@ -131,15 +131,20 @@ public class ListTeknisiGangguan extends AppCompatActivity {
         int id= item.getItemId();
 
         switch (id){
-            case R.id.grupTeknisipb:
-                Intent i = new Intent (getApplicationContext(),TeknisiMenuActivity.class);
+            case R.id.list_teknisi:
+                Intent i = new Intent(getApplicationContext(), TeknisiMenuActivity.class);
                 startActivity(i);
                 super.onBackPressed();
                 break;
-            case R.id.grupTeknisigangguan:
-                Intent I = new Intent (getApplicationContext(),MenuGrupTeknisi.class);
+            case R.id.list_grup:
+                Intent I = new Intent(getApplicationContext(), MenuGrupTeknisi.class);
                 startActivity(I);
                 super.onBackPressed();
+                break;
+            case R.id.logout:
+                FirebaseAuth.getInstance().signOut();
+                finish();
+                startActivity(new Intent(this, LoginActivity.class));
                 break;
         }
         return super.onOptionsItemSelected(item);

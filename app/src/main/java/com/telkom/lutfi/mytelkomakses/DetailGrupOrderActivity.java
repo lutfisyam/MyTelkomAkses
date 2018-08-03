@@ -143,7 +143,7 @@ public class DetailGrupOrderActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(DetailGrupOrderActivity.this, InputFinishReportActivity.class);
-                    intent.putExtra("OTNIEL_KONTOL", SCid);
+                    intent.putExtra("scid", SCid);
                     startActivity(intent);
                     finish();
                 }

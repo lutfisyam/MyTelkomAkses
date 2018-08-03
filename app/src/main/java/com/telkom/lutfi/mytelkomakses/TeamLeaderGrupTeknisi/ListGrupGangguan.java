@@ -36,6 +36,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.telkom.lutfi.mytelkomakses.LoginActivity;
 import com.telkom.lutfi.mytelkomakses.R;
 import com.telkom.lutfi.mytelkomakses.TeamLeaderTeknisi.TeknisiMenuActivity;
 import com.telkom.lutfi.mytelkomakses.TeknisiActivity;
@@ -138,15 +139,20 @@ public class ListGrupGangguan extends AppCompatActivity {
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.grupTeknisipb:
+            case R.id.list_teknisi:
                 Intent i = new Intent(getApplicationContext(), TeknisiMenuActivity.class);
                 startActivity(i);
                 super.onBackPressed();
                 break;
-            case R.id.grupTeknisigangguan:
+            case R.id.list_grup:
                 Intent I = new Intent(getApplicationContext(), MenuGrupTeknisi.class);
                 startActivity(I);
                 super.onBackPressed();
+                break;
+            case R.id.logout:
+                FirebaseAuth.getInstance().signOut();
+                finish();
+                startActivity(new Intent(this, LoginActivity.class));
                 break;
         }
 

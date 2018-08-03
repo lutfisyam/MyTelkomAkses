@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -41,8 +42,14 @@ import com.telkom.lutfi.mytelkomakses.LoginActivity;
 import com.telkom.lutfi.mytelkomakses.R;
 import com.telkom.lutfi.mytelkomakses.model.Order;
 import com.telkom.lutfi.mytelkomakses.model.User;
+import com.telkom.lutfi.mytelkomakses.post.PostData;
+import com.telkom.lutfi.mytelkomakses.post.PostGangguan;
+//import com.telkom.lutfi.mytelkomakses.post.PostGangguan;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,11 +87,13 @@ public class ListOrderGangguan extends AppCompatActivity {
                 String alamat = model.getAlamat();
                 String kontak = model.getKontak();
                 String nama = model.getNama();
+                String status = model.getStatus();
                 final String id_order = getSnapshots().getSnapshot(position).getId();
 
                 holder.setNama(nama);
                 holder.setAlamat(alamat);
                 holder.setKontak(kontak);
+                holder.setStatus(status);
                 holder.deleteUser(nama, id_order);
 
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -98,7 +107,7 @@ public class ListOrderGangguan extends AppCompatActivity {
             @Override
             public ListOrderGangguan.OrderViewHolder onCreateViewHolder(ViewGroup group, int i) {
                 View view = LayoutInflater.from(group.getContext())
-                        .inflate(R.layout.layout_list_name, group, false);
+                        .inflate(R.layout.layout_order_indicator, group, false);
 
                 return new ListOrderGangguan.OrderViewHolder(view);
             }
@@ -134,13 +143,13 @@ public class ListOrderGangguan extends AppCompatActivity {
         int id= item.getItemId();
 
         switch (id){
-            case R.id.OrderGangguan:
-                Intent i = new Intent (getApplicationContext(),ListOrderGangguan.class);
+            case R.id.PrintGangguan:
+                Intent i = new Intent(getApplicationContext(), PostGangguan.class);
                 startActivity(i);
                 super.onBackPressed();
                 break;
-            case R.id.OrderPasang:
-                Intent I = new Intent (getApplicationContext(),ListOrderPasangBaru.class);
+            case R.id.PrintPasang:
+                Intent I = new Intent(getApplicationContext(), PostData.class);
                 startActivity(I);
                 super.onBackPressed();
                 break;
@@ -161,40 +170,50 @@ public class ListOrderGangguan extends AppCompatActivity {
     }
 
 
-    private void ambilData(DocumentSnapshot documentSnapshot, ArrayList<String> team) {
-
-        {
-            team.clear();
-            String nama = documentSnapshot.getString("nama");
-            team.add(nama);
-        }
-
-    }
-
     private class OrderViewHolder extends RecyclerView.ViewHolder {
         public OrderViewHolder(View itemView) {
             super(itemView);
+        }
 
+        void setStatus(String status) {
+            ImageView imageView1 = (ImageView) itemView.findViewById(R.id.in_belum);
+            ImageView imageView2 = (ImageView) itemView.findViewById(R.id.in_proses);
+            ImageView imageView3 = (ImageView) itemView.findViewById(R.id.in_selesai);
+            if(status.equals("belum")) {
+                imageView1.setVisibility(View.VISIBLE);
+                imageView2.setVisibility(View.GONE);
+                imageView3.setVisibility(View.GONE);
+            } else if (status.equals("proses")) {
+
+                imageView1.setVisibility(View.GONE);
+                imageView2.setVisibility(View.VISIBLE);
+                imageView3.setVisibility(View.GONE);
+            } else {
+
+                imageView1.setVisibility(View.GONE);
+                imageView2.setVisibility(View.GONE);
+                imageView3.setVisibility(View.VISIBLE);
+            }
         }
 
         void setNama(String nama) {
-            TextView textView = (TextView) itemView.findViewById(R.id.karyawan_name);
+            TextView textView = (TextView) itemView.findViewById(R.id.namagrup);
             textView.setText(nama);
         }
 
         void setAlamat(String email) {
-            TextView textView = (TextView) itemView.findViewById(R.id.karyawan_email);
+            TextView textView = (TextView) itemView.findViewById(R.id.emailteknisi1);
             textView.setText(email);
         }
 
         void setKontak(String email) {
-            TextView textView = (TextView) itemView.findViewById(R.id.karyawan_email);
+            TextView textView = (TextView) itemView.findViewById(R.id.emailteknisi2);
             textView.setText(email);
         }
 
 
         void deleteUser( final String nama, final String id) {
-            ImageView button = (ImageView) itemView.findViewById(R.id.delete_karyawan);
+            ImageView button = (ImageView) itemView.findViewById(R.id.delete_grup);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -237,15 +256,14 @@ public class ListOrderGangguan extends AppCompatActivity {
             super(context);
 
             LayoutInflater inflater = LayoutInflater.from(ListOrderGangguan.this);
-            View addFormView = inflater.inflate(R.layout.create_order, null);
+            View addFormView = inflater.inflate(R.layout.create_order_gangguan, null);
 
-            final EditText inputNotic = (EditText) addFormView.findViewById(R.id.enter_sc);
+            final EditText inputNotic = (EditText) addFormView.findViewById(R.id.enter_tiket);
             final EditText inputNapel = (EditText) addFormView.findViewById(R.id.enter_namapel);
             final EditText inputLokasi = (EditText) addFormView.findViewById(R.id.enter_alamat);
             final EditText inputTlpn = (EditText) addFormView.findViewById(R.id.enter_kontak);
-            final EditText inputNoin = (EditText) addFormView.findViewById(R.id.enter_ncli);
-            final EditText inputTgl = (EditText) addFormView.findViewById(R.id.enter_ndem);
-            final EditText inputjenisGG = (EditText) addFormView.findViewById(R.id.enter_alproname);
+            final EditText inputNoin = (EditText) addFormView.findViewById(R.id.enter_internet);
+            final EditText inputjenisGG = (EditText) addFormView.findViewById(R.id.enter_jenisgg);
             final Spinner inputTeamName = (Spinner) addFormView.findViewById(R.id.enter_grupteamteknisi);
             spin = (Spinner) addFormView.findViewById(R.id.enter_gruporder);
 
@@ -292,7 +310,6 @@ public class ListOrderGangguan extends AppCompatActivity {
                     final String lokasi = inputLokasi.getText().toString();
                     final String tlpn = inputTlpn.getText().toString();
                     final String nointernet = inputNoin.getText().toString();
-                    final String tgl = inputTgl.getText().toString();
                     final String jenisgg = inputjenisGG.getText().toString();
                     final String namaTeam = inputTeamName.getItemAtPosition(posisi_E1).toString();
                     final String gruporder = spin.getItemAtPosition(post).toString();
@@ -302,17 +319,16 @@ public class ListOrderGangguan extends AppCompatActivity {
                             && !TextUtils.isEmpty(lokasi)
                             && !TextUtils.isEmpty(tlpn)
                             && !TextUtils.isEmpty(nointernet)
-                            && !TextUtils.isEmpty(tgl)
                             && !TextUtils.isEmpty(jenisgg)
                             ) {
 
-                        Map<String, String> new_user = new HashMap<>();
+                        Map<String, Object> new_user = new HashMap<>();
                         new_user.put("no_tiket", notiket);
                         new_user.put("nama", nama);
                         new_user.put("alamat", lokasi);
                         new_user.put("kontak", tlpn);
                         new_user.put("no_internet", nointernet);
-                        new_user.put("tgl", tgl);
+                        new_user.put("tgl", new Date());
                         new_user.put("jenis_gangguan", jenisgg);
                         new_user.put("jenis", gruporder);
                         new_user.put("team", namaTeam);
@@ -342,7 +358,6 @@ public class ListOrderGangguan extends AppCompatActivity {
                     inputLokasi.getText().clear();
                     inputTlpn.getText().clear();
                     inputNoin.getText().clear();
-                    inputTgl.getText().clear();
                     inputjenisGG.getText().clear();
                 }
             });

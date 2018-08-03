@@ -59,12 +59,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                    latitude = tp.getLatitude();
                     longitude = tp.getLonglitude();
                     String nama = tp.getNama();
-                    Toast.makeText(MapsActivity.this, latitude.toString()+ longitude.toString()+nama, Toast.LENGTH_LONG).show();
                    LatLng newPos = new LatLng(latitude, longitude);
-
-
                     Marker marker1 = mMap.addMarker(new MarkerOptions()
-                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.icongreensmall))
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.location_small))
                                     .position(newPos)
                                     .title(nama)
                                     .draggable(false)
@@ -85,11 +82,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+//        LatLng sydney = new LatLng(-34, 151);
+//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        LatLng malang = new LatLng(-7.9784695,112.5617419);
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(malang,12.0f));
         }
 
-
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }

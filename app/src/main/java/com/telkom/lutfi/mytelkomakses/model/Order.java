@@ -1,5 +1,7 @@
 package com.telkom.lutfi.mytelkomakses.model;
 
+import java.util.Date;
+
 public class Order {
     private String sc;
     private String nama;
@@ -8,18 +10,21 @@ public class Order {
     private String jenis;
     private String ncli;
     private String ndem;
-    private String Alproname;
+    private String alproname;
     private String team;
     private String status;
     private String bukti;
     private String jenis_gangguan;
     private String no_tiket;
     private String no_internet;
+    private Date tgl;
+    private Date waktumulai;
+    private Date waktuselesai;
 
     public Order() {
     }
 
-    public Order(String sc, String nama, String alamat, String kontak, String jenis, String ncli, String ndem, String alproname, String team, String status, String bukti, String jenis_gangguan, String no_tiket, String no_internet) {
+    public Order(String sc, String nama, String alamat, String kontak, String jenis, String ncli, String ndem, String alproname, String team, String status, String bukti, String jenis_gangguan, String no_tiket, String no_internet, Date tgl, Date waktumulai, Date waktuselesai) {
         this.sc = sc;
         this.nama = nama;
         this.alamat = alamat;
@@ -27,47 +32,16 @@ public class Order {
         this.jenis = jenis;
         this.ncli = ncli;
         this.ndem = ndem;
-        this.Alproname = alproname;
+        this.alproname = alproname;
         this.team = team;
         this.status = status;
         this.bukti = bukti;
         this.jenis_gangguan = jenis_gangguan;
         this.no_tiket = no_tiket;
         this.no_internet = no_internet;
-    }
-
-
-
-    public String getJenis_gangguan() {
-        return jenis_gangguan;
-    }
-
-    public void setJenis_gangguan(String jenis_gangguan) {
-        this.jenis_gangguan = jenis_gangguan;
-    }
-
-    public String getNo_tiket() {
-        return no_tiket;
-    }
-
-    public void setNo_tiket(String no_tiket) {
-        this.no_tiket = no_tiket;
-    }
-
-    public String getNo_internet() {
-        return no_internet;
-    }
-
-    public void setNo_internet(String no_internet) {
-        this.no_internet = no_internet;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
+        this.tgl = tgl;
+        this.waktumulai = waktumulai;
+        this.waktuselesai = waktuselesai;
     }
 
     public String getSc() {
@@ -127,11 +101,11 @@ public class Order {
     }
 
     public String getAlproname() {
-        return Alproname;
+        return alproname;
     }
 
     public void setAlproname(String alproname) {
-        Alproname = alproname;
+        this.alproname = alproname;
     }
 
     public String getTeam() {
@@ -142,6 +116,14 @@ public class Order {
         this.team = team;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public String getBukti() {
         return bukti;
     }
@@ -149,4 +131,53 @@ public class Order {
     public void setBukti(String bukti) {
         this.bukti = bukti;
     }
+
+    public String getJenis_gangguan() {
+        return jenis_gangguan;
+    }
+
+    public void setJenis_gangguan(String jenis_gangguan) {
+        this.jenis_gangguan = jenis_gangguan;
+    }
+
+    public String getNo_tiket() {
+        return no_tiket;
+    }
+
+    public void setNo_tiket(String no_tiket) {
+        this.no_tiket = no_tiket;
+    }
+
+    public String getNo_internet() {
+        return no_internet;
+    }
+
+    public void setNo_internet(String no_internet) {
+        this.no_internet = no_internet;
+    }
+
+    public Date getTgl() {
+        return tgl;
+    }
+
+    public void setTgl(Date tgl) {
+        this.tgl = tgl;
+    }
+
+    public Date getWaktumulai() {
+        return waktumulai;
+    }
+
+    public void setWaktumulai(Date waktumulai) {
+        this.waktumulai = waktumulai;
+    }
+
+    public Date getWaktuselesai() {
+        return waktuselesai;
+    }
+
+    public void setWaktuselesai(Date waktuselesai) {
+        this.waktuselesai = waktuselesai;
+    }
+
 }

@@ -41,6 +41,9 @@ import com.telkom.lutfi.mytelkomakses.LoginActivity;
 import com.telkom.lutfi.mytelkomakses.R;
 import com.telkom.lutfi.mytelkomakses.model.Order;
 import com.telkom.lutfi.mytelkomakses.model.User;
+import com.telkom.lutfi.mytelkomakses.post.PostData;
+import com.telkom.lutfi.mytelkomakses.post.PostGangguan;
+//import com.telkom.lutfi.mytelkomakses.post.PostGangguan;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -80,11 +83,13 @@ public class ListOrderPasangBaru extends AppCompatActivity {
                 String alamat = model.getAlamat();
                 String kontak = model.getKontak();
                 String nama = model.getNama();
+                String status =model.getStatus();
                 final String id_order = getSnapshots().getSnapshot(position).getId();
 
                 holder.setNama(nama);
                 holder.setAlamat(alamat);
                 holder.setKontak(kontak);
+                holder.setStatus(status);
                 holder.deleteUser(nama, id_order);
 
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -98,7 +103,7 @@ public class ListOrderPasangBaru extends AppCompatActivity {
             @Override
             public ListOrderPasangBaru.UserViewHolder onCreateViewHolder(ViewGroup group, int i) {
                 View view = LayoutInflater.from(group.getContext())
-                        .inflate(R.layout.layout_list_grup, group, false);
+                        .inflate(R.layout.layout_order_indicator, group, false);
 
                 return new ListOrderPasangBaru.UserViewHolder(view);
             }
@@ -134,13 +139,13 @@ public class ListOrderPasangBaru extends AppCompatActivity {
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.OrderGangguan:
-                Intent i = new Intent(getApplicationContext(), ListOrderGangguan.class);
+            case R.id.PrintGangguan:
+                Intent i = new Intent(getApplicationContext(), PostGangguan.class);
                 startActivity(i);
                 super.onBackPressed();
                 break;
-            case R.id.OrderPasang:
-                Intent I = new Intent(getApplicationContext(), ListOrderPasangBaru.class);
+            case R.id.PrintPasang:
+                Intent I = new Intent(getApplicationContext(), PostData.class);
                 startActivity(I);
                 super.onBackPressed();
                 break;
@@ -164,6 +169,27 @@ public class ListOrderPasangBaru extends AppCompatActivity {
         public UserViewHolder(View itemView) {
             super(itemView);
 
+        }
+
+        void setStatus(String status) {
+            ImageView imageView1 = (ImageView) itemView.findViewById(R.id.in_belum);
+            ImageView imageView2 = (ImageView) itemView.findViewById(R.id.in_proses);
+            ImageView imageView3 = (ImageView) itemView.findViewById(R.id.in_selesai);
+            if(status.equals("belum")) {
+                imageView1.setVisibility(View.VISIBLE);
+                imageView2.setVisibility(View.GONE);
+                imageView3.setVisibility(View.GONE);
+            } else if (status.equals("proses")) {
+
+                imageView1.setVisibility(View.GONE);
+                imageView2.setVisibility(View.VISIBLE);
+                imageView3.setVisibility(View.GONE);
+            } else {
+
+                imageView1.setVisibility(View.GONE);
+                imageView2.setVisibility(View.GONE);
+                imageView3.setVisibility(View.VISIBLE);
+            }
         }
 
         void setNama(String nama) {
@@ -300,7 +326,7 @@ public class ListOrderPasangBaru extends AppCompatActivity {
                         new_user.put("kontak", Kontak);
                         new_user.put("ncli", ncli);
                         new_user.put("ndem", ndem);
-                        new_user.put("Alproname", alproname);
+                        new_user.put("alproname", alproname);
                         new_user.put("jenis", gruporder);
                         new_user.put("team", namaTeam);
                         new_user.put("status", "belum");

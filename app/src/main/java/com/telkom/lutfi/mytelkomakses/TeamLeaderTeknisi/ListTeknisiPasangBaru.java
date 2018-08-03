@@ -101,16 +101,12 @@ public class ListTeknisiPasangBaru extends AppCompatActivity {
                     }
                 });
             }
-
             @Override
             public ListTeknisiPasangBaru.UserViewHolder onCreateViewHolder(ViewGroup group, int i) {
                 View view = LayoutInflater.from(group.getContext())
                         .inflate(R.layout.layout_list_name, group, false);
-
                 return new ListTeknisiPasangBaru.UserViewHolder(view);
             }
-
-
         };
 
 
@@ -141,15 +137,20 @@ public class ListTeknisiPasangBaru extends AppCompatActivity {
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.grupTeknisipb:
+            case R.id.list_teknisi:
                 Intent i = new Intent(getApplicationContext(), TeknisiMenuActivity.class);
                 startActivity(i);
                 super.onBackPressed();
                 break;
-            case R.id.grupTeknisigangguan:
+            case R.id.list_grup:
                 Intent I = new Intent(getApplicationContext(), MenuGrupTeknisi.class);
                 startActivity(I);
                 super.onBackPressed();
+                break;
+            case R.id.logout:
+                FirebaseAuth.getInstance().signOut();
+                finish();
+                startActivity(new Intent(this, LoginActivity.class));
                 break;
         }
         return super.onOptionsItemSelected(item);

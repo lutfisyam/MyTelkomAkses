@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/OrderGangguan"
+        android:id="@+id/PrintGangguan"
         android:title="@string/Order_Gangguan"
         app:showAsAction="never"/>
 
     <item
-        android:id="@+id/OrderPasang"
+        android:id="@+id/PrintPasang"
         android:title="@string/Order_Pasang"
         app:showAsAction="never"/>
     <item

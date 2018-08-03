@@ -26,14 +26,21 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.telkom.lutfi.mytelkomakses.DetailGrupOrderActivity;
+import com.telkom.lutfi.mytelkomakses.DetailOrderLayoutTL;
 import com.telkom.lutfi.mytelkomakses.R;
 import com.telkom.lutfi.mytelkomakses.model.Order;
 
 import java.util.ArrayList;
+
+import javax.annotation.Nullable;
 
 public class ListDetailGrupPasangBaru extends AppCompatActivity {
 
@@ -48,7 +55,7 @@ public class ListDetailGrupPasangBaru extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_layout);
-        Toolbar toolbar =(Toolbar)findViewById(R.id.app_bar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
         Intent intent = getIntent();
 
@@ -74,19 +81,22 @@ public class ListDetailGrupPasangBaru extends AppCompatActivity {
                 final String nama_grup = model.getNama();
                 final String almt = model.getAlamat();
                 final String kontak = model.getKontak();
+                final String status = model.getStatus();
                 final String id = getSnapshots().getSnapshot(position).getId();
 
                 holder.setNama_grup(nama_grup);
                 holder.setEmailtek1(almt);
                 holder.setEmailtek2(kontak);
+                holder.setStatus(status);
                 holder.deleteUser(nama_grup, id);
+
 
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-                        Intent intent = new Intent(getApplicationContext(),DetailGrupOrderActivity.class);
-                        intent.putExtra("id",nama_grup);
+                        Intent intent = new Intent(getApplicationContext(), DetailOrderLayoutTL.class);
+                        intent.putExtra("id", nama_grup);
                         intent.putExtra("sc", model.getSc());
                         intent.putExtra("nama", model.getNama());
                         intent.putExtra("alamat", model.getAlamat());
@@ -95,15 +105,17 @@ public class ListDetailGrupPasangBaru extends AppCompatActivity {
                         intent.putExtra("ndem", model.getNdem());
                         intent.putExtra("alproname", model.getAlproname());
                         intent.putExtra("status", model.getStatus());
+                        intent.putExtra("bukti", model.getBukti());
                         startActivity(intent);
 //                        Toast.makeText(ListDetailGrupPasangBaru.this, id, Toast.LENGTH_LONG).show();
                     }
                 });
             }
+
             @Override
             public ListDetailGrupPasangBaru.TeamViewHolder onCreateViewHolder(ViewGroup group, int i) {
                 View view = LayoutInflater.from(group.getContext())
-                        .inflate(R.layout.layout_list_grup, group, false);
+                        .inflate(R.layout.layout_order_indicator, group, false);
 
                 return new ListDetailGrupPasangBaru.TeamViewHolder(view);
             }
@@ -116,26 +128,26 @@ public class ListDetailGrupPasangBaru extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater =getMenuInflater();
+        MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id= item.getItemId();
+        int id = item.getItemId();
 
-        switch (id){
-            case R.id.grupTeknisipb:
-                Intent i = new Intent (getApplicationContext(),ListGrupPasang.class);
-                startActivity(i);
-                super.onBackPressed();
-                break;
-            case R.id.grupTeknisigangguan:
-                Intent I = new Intent (getApplicationContext(),ListGrupGangguan.class);
-                startActivity(I);
-                super.onBackPressed();
-                break;
+        switch (id) {
+//            case R.id.grupTeknisipb:
+//                Intent i = new Intent (getApplicationContext(),ListGrupPasang.class);
+//                startActivity(i);
+//                super.onBackPressed();
+//                break;
+//            case R.id.grupTeknisigangguan:
+//                Intent I = new Intent (getApplicationContext(),ListGrupGangguan.class);
+//                startActivity(I);
+//                super.onBackPressed();
+//                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -154,21 +166,33 @@ public class ListDetailGrupPasangBaru extends AppCompatActivity {
     }
 
 
-    private void ambilData(DocumentSnapshot documentSnapshot, ArrayList<String> team) {
-
-        {
-            team.clear();
-            String nama = documentSnapshot.getString("nama_grup");
-            team.add(nama);
-        }
-
-    }
-
     private class TeamViewHolder extends RecyclerView.ViewHolder {
         public TeamViewHolder(View itemView) {
             super(itemView);
 
         }
+
+        void setStatus(String status) {
+            ImageView imageView1 = (ImageView) itemView.findViewById(R.id.in_belum);
+            ImageView imageView2 = (ImageView) itemView.findViewById(R.id.in_proses);
+            ImageView imageView3 = (ImageView) itemView.findViewById(R.id.in_selesai);
+            if(status.equals("belum")) {
+                imageView1.setVisibility(View.VISIBLE);
+                imageView2.setVisibility(View.GONE);
+                imageView3.setVisibility(View.GONE);
+            } else if (status.equals("proses")) {
+
+                imageView1.setVisibility(View.GONE);
+                imageView2.setVisibility(View.VISIBLE);
+                imageView3.setVisibility(View.GONE);
+            } else {
+
+                imageView1.setVisibility(View.GONE);
+                imageView2.setVisibility(View.GONE);
+                imageView3.setVisibility(View.VISIBLE);
+            }
+        }
+
 
         void setNama_grup(String nama) {
             TextView textView = (TextView) itemView.findViewById(R.id.namagrup);
@@ -185,7 +209,7 @@ public class ListDetailGrupPasangBaru extends AppCompatActivity {
             textView.setText(email2);
         }
 
-        void deleteUser( final String nama, final String id) {
+        void deleteUser(final String nama, final String id) {
             ImageView button = (ImageView) itemView.findViewById(R.id.delete_grup);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override

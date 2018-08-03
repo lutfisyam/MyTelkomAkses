@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/grupTeknisipb"
+        android:id="@+id/list_teknisi"
         android:title="@string/gruppasang"
         android:icon="@drawable/ic_person"
         app:showAsAction="always"/>
     <item
-        android:id="@+id/grupTeknisigangguan"
+        android:id="@+id/list_grup"
         android:title="@string/grupgangguan"
         android:icon="@drawable/ic_grup"
         app:showAsAction="always"/>
@@ -16,7 +16,4 @@
         android:id="@+id/logout"
         android:title="@string/logout"
         app:showAsAction="never"/>
-
-
-
 </menu>

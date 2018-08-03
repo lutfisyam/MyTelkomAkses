@@ -3,8 +3,8 @@
     <string name="title_activity_home">HomeActivity</string>
     <string name="gruppasang">Team Pasang Baru</string>
     <string name="grupgangguan">Team Gangguan</string>
-    <string name="Order_Gangguan">Order Gangguan</string>
-    <string name="Order_Pasang">Order Pasang Baru</string>
+    <string name="Order_Gangguan">Print Gangguan</string>
+    <string name="Order_Pasang">Print Pasang Baru</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_activity_main">MainActivity</string>
