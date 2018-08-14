@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -28,9 +27,6 @@ public class HomeActivity extends AppCompatActivity {
     // deklasajfvad
     FirebaseAuth mAuth;
     FirebaseFirestore mCurrentUserRef;
-
-    private FusedLocationProviderClient mFusedLocationClient;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,17 +53,15 @@ public class HomeActivity extends AppCompatActivity {
 
                         if (snapshot != null && snapshot.exists()) {
                             String jenis = snapshot.getString("jenis");
-//                            jenisText.setText(jenis);
+;
 
                             namagrup[0] = snapshot.getString("nama_grup");
 
                             if (jenis != null && (jenis.equals("teknisi_pasang_baru") || jenis.equals("teknisi_gangguan"))) {
                                 CardView cardView = (CardView) findViewById(R.id.gotoTeamLeader);
-                                //CardView cardView = (CardView) findViewById(R.id.gotoTeknisi);
                                 cardView.setVisibility(View.GONE);
                             } else {
                                 CardView cardView = (CardView) findViewById(R.id.gotoTeknisi);
-                                //CardView cardView = (CardView) findViewById(R.id.gotoTeamLeader);
                                 cardView.setVisibility(View.GONE);
                             }
 

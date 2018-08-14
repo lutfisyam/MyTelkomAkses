@@ -96,12 +96,6 @@ public class ListOrderGangguan extends AppCompatActivity {
                 holder.setStatus(status);
                 holder.deleteUser(nama, id_order);
 
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(ListOrderGangguan.this, id_order, Toast.LENGTH_LONG).show();
-                    }
-                });
             }
 
             @Override
@@ -179,20 +173,27 @@ public class ListOrderGangguan extends AppCompatActivity {
             ImageView imageView1 = (ImageView) itemView.findViewById(R.id.in_belum);
             ImageView imageView2 = (ImageView) itemView.findViewById(R.id.in_proses);
             ImageView imageView3 = (ImageView) itemView.findViewById(R.id.in_selesai);
-            if(status.equals("belum")) {
+            ImageView imageView4 = (ImageView) itemView.findViewById(R.id.in_ayahab);
+            if (status.equals("belum")) {
                 imageView1.setVisibility(View.VISIBLE);
                 imageView2.setVisibility(View.GONE);
                 imageView3.setVisibility(View.GONE);
+                imageView4.setVisibility(View.GONE);
             } else if (status.equals("proses")) {
-
                 imageView1.setVisibility(View.GONE);
                 imageView2.setVisibility(View.VISIBLE);
                 imageView3.setVisibility(View.GONE);
-            } else {
-
+                imageView4.setVisibility(View.GONE);
+            } else if (status.equals("selesai")) {
                 imageView1.setVisibility(View.GONE);
                 imageView2.setVisibility(View.GONE);
                 imageView3.setVisibility(View.VISIBLE);
+                imageView4.setVisibility(View.GONE);
+            } else if (status.equals("gagal")){
+                imageView1.setVisibility(View.GONE);
+                imageView2.setVisibility(View.GONE);
+                imageView3.setVisibility(View.GONE);
+                imageView4.setVisibility(View.VISIBLE);
             }
         }
 
@@ -326,7 +327,7 @@ public class ListOrderGangguan extends AppCompatActivity {
                         new_user.put("no_tiket", notiket);
                         new_user.put("nama", nama);
                         new_user.put("alamat", lokasi);
-                        new_user.put("kontak", tlpn);
+                        new_user.put("kontak", "+62"+tlpn);
                         new_user.put("no_internet", nointernet);
                         new_user.put("tgl", new Date());
                         new_user.put("jenis_gangguan", jenisgg);
@@ -334,7 +335,7 @@ public class ListOrderGangguan extends AppCompatActivity {
                         new_user.put("team", namaTeam);
                         new_user.put("status", "belum");
                         // table dot primary dot isi
-                        mFireStore.collection("order").document().set(new_user)
+                        mFireStore.collection("order").document(notiket).set(new_user)
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {

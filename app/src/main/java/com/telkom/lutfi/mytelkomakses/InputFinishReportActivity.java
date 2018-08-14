@@ -41,17 +41,23 @@ public class InputFinishReportActivity extends AppCompatActivity {
     private StorageReference buktiStorageRef;
     private FirebaseStorage firebaseStorage;
     private FirebaseFirestore mFireStore;
-    private String SCid, bukti;
+    private String SCid, noTic, bukti, jenis;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input_finish_report);
 
-        SCid = getIntent().getStringExtra("scid");
+        jenis = getIntent().getStringExtra("jenis");
 
         firebaseStorage = FirebaseStorage.getInstance();
-        buktiStorageRef = firebaseStorage.getReference().child(SCid);
+        if (jenis.equals("Pasang Baru")) {
+            SCid = getIntent().getStringExtra("scid");
+            buktiStorageRef = firebaseStorage.getReference().child(SCid);
+        } else {
+            noTic = getIntent().getStringExtra("no_tiket");
+            buktiStorageRef = firebaseStorage.getReference().child(noTic);
+        }
         Button btn = (Button) findViewById(R.id.opencamera);
         uploadBtn = (Button) findViewById(R.id.upload_butki_btn);
         img = (ImageView) findViewById(R.id.photoImage);
@@ -90,7 +96,11 @@ public class InputFinishReportActivity extends AppCompatActivity {
                     progressDialog.show();
                     progressDialog.setCancelable(false);
                     progressDialog.setCanceledOnTouchOutside(false);
-                    buktiStorageRef.child(String.valueOf(SCid + ".jpg"));
+                    if (jenis.equals("Pasang Baru")) {
+                        buktiStorageRef.child(String.valueOf(SCid + ".jpg"));
+                    } else {
+                        buktiStorageRef.child(String.valueOf(noTic + ".jpg"));
+                    }
                     buktiStorageRef.putFile(gambarURI).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
@@ -102,14 +112,26 @@ public class InputFinishReportActivity extends AppCompatActivity {
                                         validMap.put("bukti", uri.toString());
                                         validMap.put("status", "selesai");
                                         validMap.put("waktuselesai", new Date());
-                                        FirebaseFirestore.getInstance().collection("order").document(SCid)
-                                                .update(validMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                Toast.makeText(InputFinishReportActivity.this, "Upload Sukses", Toast.LENGTH_SHORT).show();
-                                                progressDialog.dismiss();
-                                            }
-                                        });
+                                        if (jenis.equals("Pasang Baru")) {
+                                            FirebaseFirestore.getInstance().collection("order").document(SCid)
+                                                    .update(validMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Toast.makeText(InputFinishReportActivity.this, "Upload Sukses", Toast.LENGTH_SHORT).show();
+                                                    progressDialog.dismiss();
+                                                }
+                                            });
+                                        } else {
+                                            FirebaseFirestore.getInstance().collection("order").document(noTic)
+                                                    .update(validMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Toast.makeText(InputFinishReportActivity.this, "Upload Sukses", Toast.LENGTH_SHORT).show();
+                                                    progressDialog.dismiss();
+                                                }
+                                            });
+                                        }
+
                                     }
                                 });
 
@@ -122,12 +144,5 @@ public class InputFinishReportActivity extends AppCompatActivity {
         } else {
             Toast.makeText(InputFinishReportActivity.this, "Tidak ada bukti", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private Uri getImageUri(Context context, Bitmap inImage) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), inImage, "Bukti", null);
-        return Uri.parse(path);
     }
 }

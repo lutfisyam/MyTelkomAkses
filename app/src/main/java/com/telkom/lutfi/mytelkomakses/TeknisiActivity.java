@@ -1,8 +1,8 @@
 package com.telkom.lutfi.mytelkomakses;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -11,15 +11,16 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,17 +34,24 @@ import android.widget.Toast;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
-import com.telkom.lutfi.mytelkomakses.TeamLeaderGrupTeknisi.ListGrupGangguan;
-import com.telkom.lutfi.mytelkomakses.TeamLeaderGrupTeknisi.ListGrupPasang;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.telkom.lutfi.mytelkomakses.customs.CustomDialog;
 import com.telkom.lutfi.mytelkomakses.model.Order;
 
-import java.util.ArrayList;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Nullable;
 
 public class TeknisiActivity extends AppCompatActivity implements LocationListener {
 
@@ -54,20 +62,21 @@ public class TeknisiActivity extends AppCompatActivity implements LocationListen
     private LocationManager locationManager;
     private String provider;
     private String Id_us;
-
+    private String Id_grup;
     private CustomDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list_layout);
+        setContentView(R.layout.activity_list_layout_teknisi);
         Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
+
         Intent intent = getIntent();
         dialog = new CustomDialog(TeknisiActivity.this);
 
         Id_us = intent.getStringExtra("montu");
-        String Id_grup = intent.getStringExtra("nama_grup");
+        Id_grup = intent.getStringExtra("nama_grup");
 
         mAuth = FirebaseAuth.getInstance();
         mFireStore = FirebaseFirestore.getInstance();
@@ -96,7 +105,6 @@ public class TeknisiActivity extends AppCompatActivity implements LocationListen
                 holder.setNama_grup(nama_grup);
                 holder.setEmailtek1(almt);
                 holder.setEmailtek2(kontak);
-                holder.deleteUser(nama_grup, id);
 
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
 
@@ -144,7 +152,7 @@ public class TeknisiActivity extends AppCompatActivity implements LocationListen
             @Override
             public TeknisiActivity.TeamViewHolder onCreateViewHolder(ViewGroup group, int i) {
                 View view = LayoutInflater.from(group.getContext())
-                        .inflate(R.layout.layout_list_grup, group, false);
+                        .inflate(R.layout.layout_list_teknisi, group, false);
 
                 return new TeknisiActivity.TeamViewHolder(view);
             }
@@ -177,12 +185,13 @@ public class TeknisiActivity extends AppCompatActivity implements LocationListen
             System.out.println("Provider " + provider + " has been selected.");
             onLocationChanged(location);
         } else {
-            Toast.makeText(TeknisiActivity.this, "lokasi gakonok", Toast.LENGTH_LONG).show();
+            Toast.makeText(TeknisiActivity.this, "Lokasi Tidak Aktif", Toast.LENGTH_LONG).show();
         }
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
         }
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -237,8 +246,8 @@ public class TeknisiActivity extends AppCompatActivity implements LocationListen
     protected void onStop() {
         super.onStop();
         adapter.stopListening();
-    }
 
+    }
 
 
     @Override
@@ -262,7 +271,8 @@ public class TeknisiActivity extends AppCompatActivity implements LocationListen
     protected void onPause() {
         super.onPause();
         locationManager.removeUpdates(this);
-    }
+
+   }
 
     @Override
     public void onLocationChanged(Location location) {
@@ -277,8 +287,8 @@ public class TeknisiActivity extends AppCompatActivity implements LocationListen
                     public void onComplete(@NonNull Task<Void> task) {
                     }
                 });
-//        Toast.makeText(TeknisiActivity.this, String.valueOf(lat), Toast.LENGTH_LONG).show();
-//        Toast.makeText(TeknisiActivity.this,String.valueOf(lng), Toast.LENGTH_LONG).show();
+
+
     }
 
     @Override
@@ -322,42 +332,7 @@ public class TeknisiActivity extends AppCompatActivity implements LocationListen
         }
 
 
-        void deleteUser(final String nama, final String id) {
-            ImageView button = (ImageView) itemView.findViewById(R.id.delete_grup);
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(TeknisiActivity.this);
-                    builder.setMessage("Apakah anda yakin ingin menghapus " + nama);
-                    builder.setPositiveButton("Iya", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            mFireStore.collection("team").document(id).delete()
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()) {
-                                                Toast.makeText(TeknisiActivity.this, "Berhasil", Toast.LENGTH_LONG).show();
-                                                finish();
-                                                Intent intent = new Intent(TeknisiActivity.this, TeknisiActivity.class);
-                                                startActivity(intent);
-                                            }
-                                        }
-                                    });
-                        }
-                    });
 
-                    builder.setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                        }
-                    });
-
-                    builder.show();
-                }
-            });
-        }
     }
 
 
@@ -384,5 +359,6 @@ public class TeknisiActivity extends AppCompatActivity implements LocationListen
         }
 
     }
+
 
 }

@@ -47,6 +47,7 @@ import com.telkom.lutfi.mytelkomakses.post.PostGangguan;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -83,7 +84,7 @@ public class ListOrderPasangBaru extends AppCompatActivity {
                 String alamat = model.getAlamat();
                 String kontak = model.getKontak();
                 String nama = model.getNama();
-                String status =model.getStatus();
+                String status = model.getStatus();
                 final String id_order = getSnapshots().getSnapshot(position).getId();
 
                 holder.setNama(nama);
@@ -91,13 +92,6 @@ public class ListOrderPasangBaru extends AppCompatActivity {
                 holder.setKontak(kontak);
                 holder.setStatus(status);
                 holder.deleteUser(nama, id_order);
-
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(ListOrderPasangBaru.this, id_order, Toast.LENGTH_LONG).show();
-                    }
-                });
             }
 
             @Override
@@ -137,7 +131,6 @@ public class ListOrderPasangBaru extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
         switch (id) {
             case R.id.PrintGangguan:
                 Intent i = new Intent(getApplicationContext(), PostGangguan.class);
@@ -168,27 +161,33 @@ public class ListOrderPasangBaru extends AppCompatActivity {
     private class UserViewHolder extends RecyclerView.ViewHolder {
         public UserViewHolder(View itemView) {
             super(itemView);
-
         }
 
         void setStatus(String status) {
             ImageView imageView1 = (ImageView) itemView.findViewById(R.id.in_belum);
             ImageView imageView2 = (ImageView) itemView.findViewById(R.id.in_proses);
             ImageView imageView3 = (ImageView) itemView.findViewById(R.id.in_selesai);
-            if(status.equals("belum")) {
+            ImageView imageView4 = (ImageView) itemView.findViewById(R.id.in_ayahab);
+            if (status.equals("belum")) {
                 imageView1.setVisibility(View.VISIBLE);
                 imageView2.setVisibility(View.GONE);
                 imageView3.setVisibility(View.GONE);
+                imageView4.setVisibility(View.GONE);
             } else if (status.equals("proses")) {
-
                 imageView1.setVisibility(View.GONE);
                 imageView2.setVisibility(View.VISIBLE);
                 imageView3.setVisibility(View.GONE);
-            } else {
-
+                imageView4.setVisibility(View.GONE);
+            } else if (status.equals("selesai")) {
                 imageView1.setVisibility(View.GONE);
                 imageView2.setVisibility(View.GONE);
                 imageView3.setVisibility(View.VISIBLE);
+                imageView4.setVisibility(View.GONE);
+            } else if (status.equals("gagal")){
+                imageView1.setVisibility(View.GONE);
+                imageView2.setVisibility(View.GONE);
+                imageView3.setVisibility(View.GONE);
+                imageView4.setVisibility(View.VISIBLE);
             }
         }
 
@@ -207,7 +206,7 @@ public class ListOrderPasangBaru extends AppCompatActivity {
             textView.setText(email2);
         }
 
-        void deleteUser( final String nama, final String id) {
+        void deleteUser(final String nama, final String id) {
             ImageView button = (ImageView) itemView.findViewById(R.id.delete_grup);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -237,7 +236,6 @@ public class ListOrderPasangBaru extends AppCompatActivity {
 
                         }
                     });
-
                     builder.show();
                 }
             });
@@ -246,10 +244,8 @@ public class ListOrderPasangBaru extends AppCompatActivity {
 
 
     private class AddOrderDialog extends AlertDialog {
-
         protected AddOrderDialog(@NonNull Context context) {
             super(context);
-
             LayoutInflater inflater = LayoutInflater.from(ListOrderPasangBaru.this);
             View addFormView = inflater.inflate(R.layout.create_order, null);
 
@@ -276,15 +272,10 @@ public class ListOrderPasangBaru extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 for (DocumentSnapshot documentSnapshot : task.getResult()) {
                                     teamList.add(documentSnapshot.getString("nama_grup"));
-//                                    teamIdList.add(documentSnapshot.getId());
-
-//                                    Toast.makeText(ListTeknisi.this, documentSnapshot.getString("nama"), Toast.LENGTH_LONG).show();
 
                                     ArrayAdapter<String> adapter = new ArrayAdapter<String>(ListOrderPasangBaru.this, android.R.layout.simple_spinner_item, teamList);
                                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                     inputTeamName.setAdapter(adapter);
-
-
                                 }
                             }
                         }
@@ -298,7 +289,6 @@ public class ListOrderPasangBaru extends AppCompatActivity {
             simpan.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     int post = spin.getSelectedItemPosition();
                     int posisi_E1 = inputTeamName.getSelectedItemPosition();
                     final String sc = inputSc.getText().toString();
@@ -319,11 +309,12 @@ public class ListOrderPasangBaru extends AppCompatActivity {
                             && !TextUtils.isEmpty(alproname)
                             ) {
 
-                        Map<String, String> new_user = new HashMap<>();
+                        Map<String, Object> new_user = new HashMap<>();
                         new_user.put("sc", sc);
                         new_user.put("nama", nama);
                         new_user.put("alamat", alamat);
-                        new_user.put("kontak", Kontak);
+                        new_user.put("kontak", "+62" + Kontak);
+                        new_user.put("tgl", new Date());
                         new_user.put("ncli", ncli);
                         new_user.put("ndem", ndem);
                         new_user.put("alproname", alproname);

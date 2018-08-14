@@ -83,32 +83,20 @@ public class ListTeknisiGangguan extends AppCompatActivity {
                 holder.setNama(nama_teknisi);
                 holder.setEmail(email_teknisi);
                 holder.deleteUser(email_teknisi, pass_teknisi, nama_teknisi, id_teknisi);
-
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(ListTeknisiGangguan.this, id_teknisi, Toast.LENGTH_LONG).show();
-                    }
-                });
             }
 
             @Override
             public ListTeknisiGangguan.UserViewHolder onCreateViewHolder(ViewGroup group, int i) {
                 View view = LayoutInflater.from(group.getContext())
                         .inflate(R.layout.layout_list_name, group, false);
-
                 return new ListTeknisiGangguan.UserViewHolder(view);
             }
-
-
         };
-
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 AlertDialog showAddLeader = new ListTeknisiGangguan.AddTeknisiDialog(ListTeknisiGangguan.this);
                 showAddLeader.show();
             }
@@ -129,7 +117,6 @@ public class ListTeknisiGangguan extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id= item.getItemId();
-
         switch (id){
             case R.id.list_teknisi:
                 Intent i = new Intent(getApplicationContext(), TeknisiMenuActivity.class);
@@ -162,11 +149,9 @@ public class ListTeknisiGangguan extends AppCompatActivity {
         adapter.stopListening();
     }
 
-
     private class UserViewHolder extends RecyclerView.ViewHolder {
         public UserViewHolder(View itemView) {
             super(itemView);
-
         }
 
         void setNama(String nama) {
@@ -201,7 +186,7 @@ public class ListTeknisiGangguan extends AppCompatActivity {
                                                                 if (task.isSuccessful()) {
                                                                     Toast.makeText(ListTeknisiGangguan.this, "Berhasil", Toast.LENGTH_LONG).show();
                                                                     finish();
-                                                                    Intent intent = new Intent(ListTeknisiGangguan.this, LoginActivity.class);
+                                                                    Intent intent = new Intent(ListTeknisiGangguan.this, TeknisiMenuActivity.class);
                                                                     startActivity(intent);
                                                                 }
                                                             }
@@ -216,19 +201,15 @@ public class ListTeknisiGangguan extends AppCompatActivity {
                     builder.setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-
                         }
                     });
-
                     builder.show();
                 }
             });
         }
     }
 
-
     private class AddTeknisiDialog extends AlertDialog {
-
         protected AddTeknisiDialog(@NonNull Context context) {
             super(context);
 
@@ -248,29 +229,26 @@ public class ListTeknisiGangguan extends AppCompatActivity {
             simpan.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     final String id = inputId.getText().toString();
                     final String nama = inputNama.getText().toString();
                     final String email = inputEmail.getText().toString();
                     final String password = inputPassword.getText().toString();
-
                     if (!TextUtils.isEmpty(id) && !TextUtils.isEmpty(nama) && !TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)) {
                         mAuth.createUserWithEmailAndPassword(email, password)
                                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
-
                                         if (task.isSuccessful()) {
-
                                             String newUid = mAuth.getCurrentUser().getUid();
-                                            Map<String, String> new_user = new HashMap<>();
+                                            Map<String, Object> new_user = new HashMap<>();
                                             new_user.put("nip", id);
                                             new_user.put("nama", nama);
                                             new_user.put("email", email);
                                             new_user.put("pass", password);
                                             new_user.put("jenis", "teknisi_gangguan");
                                             new_user.put("job", "belum");
-
+                                            new_user.put("longlitude", new Double(152.7130015));
+                                            new_user.put("latitude", new Double (-27.3818631));
                                             // table dot primary dot isi
                                             mFireStore.collection("user").document(newUid).set(new_user)
                                                     .addOnCompleteListener(new OnCompleteListener<Void>() {

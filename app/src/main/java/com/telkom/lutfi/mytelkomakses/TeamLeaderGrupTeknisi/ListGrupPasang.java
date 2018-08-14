@@ -91,12 +91,11 @@ public class ListGrupPasang extends AppCompatActivity {
                 holder.setEmailtek1(emailTeknisi1);
                 holder.setEmailtek2(emailTeknisi2);
                 holder.deleteTeam(nama_grup, id, idTeknisi1, idTeknisi2);
-
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(ListGrupPasang.this, ListDetailGrupPasangBaru.class);
-                        intent.putExtra("montu", id);
+                        intent.putExtra("id", id);
                         startActivity(intent);
                     }
                 });
@@ -106,19 +105,14 @@ public class ListGrupPasang extends AppCompatActivity {
             public ListGrupPasang.TeamViewHolder onCreateViewHolder(ViewGroup group, int i) {
                 View view = LayoutInflater.from(group.getContext())
                         .inflate(R.layout.layout_list_grup, group, false);
-
                 return new ListGrupPasang.TeamViewHolder(view);
             }
-
-
         };
 
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+       FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 AlertDialog showAddLeader = new ListGrupPasang.AddTeknisiDialog(ListGrupPasang.this);
                 showAddLeader.show();
             }
@@ -139,7 +133,6 @@ public class ListGrupPasang extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
         switch (id) {
             case R.id.list_teknisi:
                 Intent i = new Intent(getApplicationContext(), TeknisiMenuActivity.class);
@@ -157,7 +150,6 @@ public class ListGrupPasang extends AppCompatActivity {
                 startActivity(new Intent(this, LoginActivity.class));
                 break;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -176,7 +168,6 @@ public class ListGrupPasang extends AppCompatActivity {
     private class TeamViewHolder extends RecyclerView.ViewHolder {
         public TeamViewHolder(View itemView) {
             super(itemView);
-
         }
 
         void setNama_grup(String nama) {
@@ -221,30 +212,22 @@ public class ListGrupPasang extends AppCompatActivity {
                                             }
                                         }
                                     });
-
-
                         }
                     });
-
                     builder.setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-
                         }
                     });
-
                     builder.show();
                 }
             });
         }
     }
 
-
     private class AddTeknisiDialog extends AlertDialog {
-
         protected AddTeknisiDialog(@NonNull Context context) {
             super(context);
-
             LayoutInflater inflater = LayoutInflater.from(ListGrupPasang.this);
             View addFormView = inflater.inflate(R.layout.create_grup, null);
 
@@ -269,7 +252,6 @@ public class ListGrupPasang extends AppCompatActivity {
 
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
-
                 }
             });
 
@@ -282,7 +264,6 @@ public class ListGrupPasang extends AppCompatActivity {
                                     if (documentSnapshot.getString("job").equals("belum")) {
                                         teamList.add(documentSnapshot.getString("email"));
                                         teamIdList.add(documentSnapshot.getId());
-
 
                                         ArrayAdapter<String> adapter = new ArrayAdapter<String>(ListGrupPasang.this, android.R.layout.simple_spinner_item, teamList);
                                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -324,7 +305,6 @@ public class ListGrupPasang extends AppCompatActivity {
                     final String gruporder = spin.getItemAtPosition(post).toString();
 
                     if (!TextUtils.isEmpty(namaEmail1) && !TextUtils.isEmpty(namaEmail2) && !TextUtils.isEmpty(namagrup)) {
-//                        String newUid = mAuth.getCurrentUser().getUid();
                         Map<String, String> new_user = new HashMap<>();
                         new_user.put("nama_grup", namagrup);
                         new_user.put("idlTeknisi1", idTeknisi1);
@@ -359,12 +339,12 @@ public class ListGrupPasang extends AppCompatActivity {
                                         }
                                     }
                                 });
+
                     } else {
                         Toast.makeText(ListGrupPasang.this, "Tolong lenkgapi form", Toast.LENGTH_LONG).show();
                     }
                 }
             });
-
             reset.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

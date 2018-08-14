@@ -93,14 +93,33 @@
                     android:layout_marginTop="@dimen/appbar_padding_top"
                     android:textColor="@color/colorBlack"
                     android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/showkontak"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="@string/Kotak"
-                    android:textAlignment="viewStart"/>
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/showkontak"
+                        android:layout_width="0dp"
+                        android:layout_height="30dp"
+                        android:layout_weight="1"
+                        android:hint="@string/Kotak"
+                        android:textAlignment="viewStart"/>
+
+                    <Button
+                        android:id="@+id/btn_call"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="@dimen/appbar_padding_top"
+                        android:background="@drawable/phone" />
+                    <Button
+                        android:id="@+id/btn_wa"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:padding="@dimen/appbar_padding_top"
+                        android:background="@drawable/wa" />
+
+                </LinearLayout>
+
 
                 <TextView
                     android:layout_width="match_parent"
@@ -192,6 +211,13 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Kirim bukti" />
+
+                <Button
+                    android:id="@+id/ayahab"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Hentikan Pekerjaan?"/>
 
             </LinearLayout>
 

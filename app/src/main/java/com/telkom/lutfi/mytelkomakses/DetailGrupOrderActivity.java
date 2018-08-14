@@ -1,9 +1,12 @@
 package com.telkom.lutfi.mytelkomakses;
 
 import android.content.Intent;
+import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -11,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -21,19 +26,25 @@ import com.squareup.picasso.Picasso;
 public class DetailGrupOrderActivity extends AppCompatActivity {
 
     private TextView sc, nama, alamat, kontak, ncli, ndem, alpro, status, nonin, notic, jenisgg;
-    String nkontol, JANCOK;
+    String stus;
     FirebaseAuth mAuth;
     FirebaseFirestore mCurrentUserRef;
     private ImageView fotoBuktiImage;
 
     private String SCid;
     private String jenis;
+    private String noTic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
+        setSupportActionBar(toolbar);
+
         SCid = getIntent().getStringExtra("sc");
+        noTic = getIntent().getStringExtra("no_tiket");
         jenis = getIntent().getStringExtra("jenis");
+        stus = getIntent().getStringExtra("status");
 
         if (jenis.equals("Pasang Baru")) {
             setContentView(R.layout.activity_detail_grup_order);
@@ -50,7 +61,6 @@ public class DetailGrupOrderActivity extends AppCompatActivity {
             status = (TextView) findViewById(R.id.showstatus);
             fotoBuktiImage = (ImageView) findViewById(R.id.detail_foto_bukti);
 
-
             // Pasang foto bukti
             Picasso.get().load(getIntent().getStringExtra("bukti")).into(fotoBuktiImage);
 
@@ -62,12 +72,10 @@ public class DetailGrupOrderActivity extends AppCompatActivity {
             ndem.setText(getIntent().getStringExtra("ndem"));
             alpro.setText(getIntent().getStringExtra("alproname"));
             status.setText(getIntent().getStringExtra("status"));
-            //nkontol = getIntent().getStringExtra("status");
-            nkontol = status.getText().toString();
+            stus = status.getText().toString();
             mAuth = FirebaseAuth.getInstance();
             final String currentUID = mAuth.getCurrentUser().getUid(); // Mengambil id telogin
             final String[] namagrup = new String[1];
-            JANCOK = status.getText().toString();
             mCurrentUserRef = FirebaseFirestore.getInstance();
             mCurrentUserRef.collection("user").document(currentUID)
                     .addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -85,28 +93,29 @@ public class DetailGrupOrderActivity extends AppCompatActivity {
 
                                 if (jenis != null && (jenis.equals("teknisi_pasang_baru") || jenis.equals("teknisi_gangguan"))) {
 
-                                    Toast.makeText(DetailGrupOrderActivity.this, nkontol, Toast.LENGTH_LONG).show();
-
-                                    if (nkontol.equals("belum")) {
+                                    if (stus.equals("belum")) {
                                         Button but = (Button) findViewById(R.id.kerjakan);
                                         but.setVisibility(View.VISIBLE);
                                         Button but2 = (Button) findViewById(R.id.selesai);
                                         but2.setVisibility(View.GONE);
 
-                                    } else if (nkontol.equals("proses")) {
+                                    } else if (stus.equals("proses")) {
                                         Button but = (Button) findViewById(R.id.selesai);
                                         but.setVisibility(View.VISIBLE);
                                         Button but2 = (Button) findViewById(R.id.kerjakan);
                                         but2.setVisibility(View.GONE);
 
-                                    } else if (nkontol.equals("selesai")) {
+                                    } else if (stus.equals("selesai")) {
                                         Button but = (Button) findViewById(R.id.selesai);
                                         but.setVisibility(View.GONE);
                                         Button but2 = (Button) findViewById(R.id.kerjakan);
                                         but2.setVisibility(View.GONE);
 
                                     } else {
-                                        Toast.makeText(DetailGrupOrderActivity.this, "NYASAR", Toast.LENGTH_LONG).show();
+                                        Button but = (Button) findViewById(R.id.kerjakan);
+                                        but.setVisibility(View.VISIBLE);
+                                        Button but2 = (Button) findViewById(R.id.selesai);
+                                        but2.setVisibility(View.GONE);
                                     }
 
 
@@ -115,7 +124,7 @@ public class DetailGrupOrderActivity extends AppCompatActivity {
                                     but.setVisibility(View.GONE);
                                     Button but2 = (Button) findViewById(R.id.selesai);
                                     but2.setVisibility(View.GONE);
-                                    Toast.makeText(DetailGrupOrderActivity.this, "ayam", Toast.LENGTH_LONG).show();
+
 
                                 }
 
@@ -133,6 +142,7 @@ public class DetailGrupOrderActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     Intent intent = new Intent(DetailGrupOrderActivity.this, InputReportTeknisiActivity.class);
                     intent.putExtra("sc", SCid);
+                    intent.putExtra("jenis", jenis);
                     startActivity(intent);
                     finish();
                 }
@@ -144,8 +154,34 @@ public class DetailGrupOrderActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     Intent intent = new Intent(DetailGrupOrderActivity.this, InputFinishReportActivity.class);
                     intent.putExtra("scid", SCid);
+                    intent.putExtra("jenis", jenis);
                     startActivity(intent);
                     finish();
+                }
+            });
+            Button btn_call = (Button) findViewById(R.id.btn_call);
+            btn_call.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialContactPhone(kontak.getText().toString());
+                }
+
+                private void dialContactPhone(final String phoneNumber) {
+                    startActivity(new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", String.valueOf(phoneNumber), null)));
+                }
+            });
+            Button btn_wa = (Button) findViewById(R.id.btn_wa);
+            btn_wa.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        String text = "";
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setData(Uri.parse("https://api.whatsapp.com/send?phone=" + kontak.getText().toString() + "&text=" + text));
+                        startActivity(intent);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
 
@@ -174,12 +210,11 @@ public class DetailGrupOrderActivity extends AppCompatActivity {
             jenisgg.setText(getIntent().getStringExtra("jenis_gangguan"));
             nonin.setText(getIntent().getStringExtra("no_internet"));
             status.setText(getIntent().getStringExtra("status"));
-            //nkontol = getIntent().getStringExtra("status");
-            nkontol = status.getText().toString();
+
+            stus = status.getText().toString();
             mAuth = FirebaseAuth.getInstance();
             final String currentUID = mAuth.getCurrentUser().getUid(); // Mengambil id telogin
             final String[] namagrup = new String[1];
-            JANCOK = status.getText().toString();
             mCurrentUserRef = FirebaseFirestore.getInstance();
             mCurrentUserRef.collection("user").document(currentUID)
                     .addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -197,28 +232,29 @@ public class DetailGrupOrderActivity extends AppCompatActivity {
 
                                 if (jenis != null && (jenis.equals("teknisi_pasang_baru") || jenis.equals("teknisi_gangguan"))) {
 
-                                    Toast.makeText(DetailGrupOrderActivity.this, nkontol, Toast.LENGTH_LONG).show();
-
-                                    if (nkontol.equals("belum")) {
+                                    if (stus.equals("belum")) {
                                         Button but = (Button) findViewById(R.id.kerjakan);
                                         but.setVisibility(View.VISIBLE);
                                         Button but2 = (Button) findViewById(R.id.selesai);
                                         but2.setVisibility(View.GONE);
 
-                                    } else if (nkontol.equals("proses")) {
+                                    } else if (stus.equals("proses")) {
                                         Button but = (Button) findViewById(R.id.selesai);
                                         but.setVisibility(View.VISIBLE);
                                         Button but2 = (Button) findViewById(R.id.kerjakan);
                                         but2.setVisibility(View.GONE);
 
-                                    } else if (nkontol.equals("selesai")) {
+                                    } else if (stus.equals("selesai")) {
                                         Button but = (Button) findViewById(R.id.selesai);
                                         but.setVisibility(View.GONE);
                                         Button but2 = (Button) findViewById(R.id.kerjakan);
                                         but2.setVisibility(View.GONE);
 
                                     } else {
-                                        Toast.makeText(DetailGrupOrderActivity.this, "NYASAR", Toast.LENGTH_LONG).show();
+                                        Button but = (Button) findViewById(R.id.kerjakan);
+                                        but.setVisibility(View.VISIBLE);
+                                        Button but2 = (Button) findViewById(R.id.selesai);
+                                        but2.setVisibility(View.GONE);
                                     }
 
 
@@ -244,7 +280,8 @@ public class DetailGrupOrderActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(DetailGrupOrderActivity.this, InputReportTeknisiActivity.class);
-                    intent.putExtra("sc", SCid);
+                    intent.putExtra("no_tiket", noTic);
+                    intent.putExtra("jenis", jenis);
                     startActivity(intent);
                     finish();
                 }
@@ -255,11 +292,65 @@ public class DetailGrupOrderActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(DetailGrupOrderActivity.this, InputFinishReportActivity.class);
-                    intent.putExtra("OTNIEL_KONTOL", SCid);
+                    intent.putExtra("no_tiket", noTic);
+                    intent.putExtra("jenis", jenis);
                     startActivity(intent);
                     finish();
                 }
             });
+
+            Button btn_call = (Button) findViewById(R.id.btn_call);
+            btn_call.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialContactPhone(kontak.getText().toString());
+                }
+
+                private void dialContactPhone(final String phoneNumber) {
+                    startActivity(new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", String.valueOf(phoneNumber), null)));
+                }
+            });
+
+            Button btn_wa = (Button) findViewById(R.id.btn_wa);
+            btn_wa.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        String text = "";
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setData(Uri.parse("https://api.whatsapp.com/send?phone=" + kontak.getText().toString() + "&text=" + text));
+                        startActivity(intent);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
+        Button btn_cancel = (Button) findViewById(R.id.ayahab);
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (jenis.equals("Pasang Baru")) {
+                    mCurrentUserRef.collection("order").document(SCid).update("status", "gagal")
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                }
+                            });
+                } else {
+                    mCurrentUserRef.collection("order").document(noTic).update("status", "gagal")
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                }
+                            });
+                }
+                Toast.makeText(DetailGrupOrderActivity.this,"Pekerjaan Anda Telah Di Hentikan",Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(DetailGrupOrderActivity.this, HomeActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 }

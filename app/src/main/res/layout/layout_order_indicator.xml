@@ -73,6 +73,15 @@
             android:src="@drawable/icongreen" />
 
         <ImageView
+            android:id="@+id/in_ayahab"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="2.9"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/alert" />
+
+        <ImageView
             android:id="@+id/delete_grup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

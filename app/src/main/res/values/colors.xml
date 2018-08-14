@@ -8,5 +8,6 @@
     <color name="colorWhite">#ffffff</color>
     <color name="colorBlack">#000000</color>
     <color name="colorBorder">#d0ced0</color>
-    <color name="red">#fc3940</color>
+    <color name="red">#8cfc3940</color>
+    <color name="red_trasparen">#99fc3966</color>
 </resources>

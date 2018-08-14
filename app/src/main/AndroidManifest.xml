@@ -13,6 +13,13 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permision.CALL_PHONE"></uses-permission>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.ACTION_MANAGE_OVERLAY_PERMISSION" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
     <application
         android:allowBackup="true"
@@ -21,6 +28,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,7 +45,6 @@
         <activity android:name=".TeamLeaderTeknisi.ListTeknisiPasangBaru" />
         <activity android:name=".TeamLeaderTeknisi.ListTeknisiGangguan" />
         <activity android:name=".TeamLeaderGrupTeknisi.MenuGrupTeknisi" />
-        <activity android:name=".TeamLeaderOrderTeknisi.ListOrder" />
         <activity android:name=".TeamLeaderGrupTeknisi.ListDetailGrupGangguan" />
         <activity android:name=".TeamLeaderGrupTeknisi.ListDetailGrupPasangBaru" />
         <activity android:name=".TeamLeaderOrderTeknisi.ListOrderPasangBaru" />

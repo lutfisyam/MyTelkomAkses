@@ -10,14 +10,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,26 +21,16 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.telkom.lutfi.mytelkomakses.DetailGrupOrderActivity;
 import com.telkom.lutfi.mytelkomakses.DetailOrderLayoutTL;
 import com.telkom.lutfi.mytelkomakses.R;
 import com.telkom.lutfi.mytelkomakses.model.Order;
 
-import java.util.ArrayList;
-
-import javax.annotation.Nullable;
 
 public class ListDetailGrupPasangBaru extends AppCompatActivity {
 
-    Spinner spin;
-    ArrayAdapter<CharSequence> adaptr;
+
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFireStore;
     private FirestoreRecyclerAdapter adapter;
@@ -59,7 +44,7 @@ public class ListDetailGrupPasangBaru extends AppCompatActivity {
         setSupportActionBar(toolbar);
         Intent intent = getIntent();
 
-        String Id_grup = intent.getStringExtra("montu");
+        String Id_grup = intent.getStringExtra("id");
 
         mAuth = FirebaseAuth.getInstance();
         mFireStore = FirebaseFirestore.getInstance();
@@ -76,8 +61,6 @@ public class ListDetailGrupPasangBaru extends AppCompatActivity {
         adapter = new FirestoreRecyclerAdapter<Order, ListDetailGrupPasangBaru.TeamViewHolder>(options) {
             @Override
             public void onBindViewHolder(ListDetailGrupPasangBaru.TeamViewHolder holder, int position, final Order model) {
-
-
                 final String nama_grup = model.getNama();
                 final String almt = model.getAlamat();
                 final String kontak = model.getKontak();
@@ -89,12 +72,9 @@ public class ListDetailGrupPasangBaru extends AppCompatActivity {
                 holder.setEmailtek2(kontak);
                 holder.setStatus(status);
                 holder.deleteUser(nama_grup, id);
-
-
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
                         Intent intent = new Intent(getApplicationContext(), DetailOrderLayoutTL.class);
                         intent.putExtra("id", nama_grup);
                         intent.putExtra("sc", model.getSc());
@@ -107,7 +87,6 @@ public class ListDetailGrupPasangBaru extends AppCompatActivity {
                         intent.putExtra("status", model.getStatus());
                         intent.putExtra("bukti", model.getBukti());
                         startActivity(intent);
-//                        Toast.makeText(ListDetailGrupPasangBaru.this, id, Toast.LENGTH_LONG).show();
                     }
                 });
             }
@@ -116,7 +95,6 @@ public class ListDetailGrupPasangBaru extends AppCompatActivity {
             public ListDetailGrupPasangBaru.TeamViewHolder onCreateViewHolder(ViewGroup group, int i) {
                 View view = LayoutInflater.from(group.getContext())
                         .inflate(R.layout.layout_order_indicator, group, false);
-
                 return new ListDetailGrupPasangBaru.TeamViewHolder(view);
             }
         };
@@ -124,33 +102,6 @@ public class ListDetailGrupPasangBaru extends AppCompatActivity {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(adapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(ListDetailGrupPasangBaru.this));
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        switch (id) {
-//            case R.id.grupTeknisipb:
-//                Intent i = new Intent (getApplicationContext(),ListGrupPasang.class);
-//                startActivity(i);
-//                super.onBackPressed();
-//                break;
-//            case R.id.grupTeknisigangguan:
-//                Intent I = new Intent (getApplicationContext(),ListGrupGangguan.class);
-//                startActivity(I);
-//                super.onBackPressed();
-//                break;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -165,34 +116,38 @@ public class ListDetailGrupPasangBaru extends AppCompatActivity {
         adapter.stopListening();
     }
 
-
     private class TeamViewHolder extends RecyclerView.ViewHolder {
         public TeamViewHolder(View itemView) {
             super(itemView);
-
         }
 
         void setStatus(String status) {
             ImageView imageView1 = (ImageView) itemView.findViewById(R.id.in_belum);
             ImageView imageView2 = (ImageView) itemView.findViewById(R.id.in_proses);
             ImageView imageView3 = (ImageView) itemView.findViewById(R.id.in_selesai);
-            if(status.equals("belum")) {
+            ImageView imageView4 = (ImageView) itemView.findViewById(R.id.in_ayahab);
+            if (status.equals("belum")) {
                 imageView1.setVisibility(View.VISIBLE);
                 imageView2.setVisibility(View.GONE);
                 imageView3.setVisibility(View.GONE);
+                imageView4.setVisibility(View.GONE);
             } else if (status.equals("proses")) {
-
                 imageView1.setVisibility(View.GONE);
                 imageView2.setVisibility(View.VISIBLE);
                 imageView3.setVisibility(View.GONE);
-            } else {
-
+                imageView4.setVisibility(View.GONE);
+            } else if (status.equals("selesai")) {
                 imageView1.setVisibility(View.GONE);
                 imageView2.setVisibility(View.GONE);
                 imageView3.setVisibility(View.VISIBLE);
+                imageView4.setVisibility(View.GONE);
+            } else if (status.equals("gagal")){
+                imageView1.setVisibility(View.GONE);
+                imageView2.setVisibility(View.GONE);
+                imageView3.setVisibility(View.GONE);
+                imageView4.setVisibility(View.VISIBLE);
             }
         }
-
 
         void setNama_grup(String nama) {
             TextView textView = (TextView) itemView.findViewById(R.id.namagrup);
@@ -231,18 +186,14 @@ public class ListDetailGrupPasangBaru extends AppCompatActivity {
                                             }
                                         }
                                     });
-
-
                         }
                     });
 
                     builder.setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-
                         }
                     });
-
                     builder.show();
                 }
             });

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="50dp">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="PRINT LAPORAN"
+        android:textAlignment="center"
+        android:textColor="@color/colorBlack"
+        android:textSize="30dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="Pilih Tahun"
+        android:textColor="@color/colorBlack" />
+
+    <EditText
+        android:id="@+id/tahun"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="masukkan tahun, contoh : 2018"
+        android:maxLength="4" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="Pilih Bulan"
+        android:textColor="@color/colorBlack" />
+
+    <Spinner
+        android:id="@+id/bulan"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Tanggal Awal" />
+
+    <TextView
+        android:id="@+id/selisih_tgl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="20dp"
+        android:text="tgl awal - akhir" />
+
+
+    <Button
+        android:id="@+id/print"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cetak Laporan" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:text="NB: Pastikan internet anda stabil"
+        android:textColor="@color/colorBlack" />
+
+</LinearLayout>

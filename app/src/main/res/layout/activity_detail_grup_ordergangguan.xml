@@ -7,212 +7,202 @@
     android:orientation="vertical"
     tools:context=".DetailGrupOrderActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="29dp"
-        android:layout_marginLeft="18dp"
-        android:layout_marginTop="20dp"
-        android:orientation="horizontal">
+    <include
+        android:id="@+id/app_bar"
+        layout="@layout/app_bar" />
 
-        <TextView
-            android:layout_width="130dp"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="No Tiket"
-            android:textAlignment="viewStart"
-            android:textStyle="bold" />
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/showtotik"
-            android:layout_width="181dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="@string/SC"
-            android:textAlignment="viewStart"
-            android:textStyle="bold" />
-    </LinearLayout>
+            <android.support.v7.widget.CardView
+                android:id="@+id/gotoTeamLeader"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:layout_weight="1">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="29dp"
-        android:layout_marginLeft="18dp"
-        android:layout_marginTop="2dp"
-        android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="10dp">
 
-        <TextView
-            android:layout_width="130dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Nama"
-            android:textAlignment="viewStart"
-            android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="No Tiket"
+                        android:textColor="@color/colorBlack"
+                        android:textAlignment="viewStart" />
 
-        <TextView
-            android:id="@+id/shownama"
-            android:layout_width="181dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="@string/Nama"
-            android:textAlignment="viewStart"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="29dp"
-        android:layout_marginLeft="18dp"
-        android:layout_marginTop="2dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="130dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/Alamat"
-            android:textAlignment="textStart"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/showalamat"
-            android:layout_width="181dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="@string/Alamat"
-            android:textAlignment="viewStart"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="29dp"
-        android:layout_marginLeft="18dp"
-        android:layout_marginTop="2dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="130dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/Kotak"
-            android:textAlignment="viewStart"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/showkontak"
-            android:layout_width="181dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="@string/Kotak"
-            android:textAlignment="viewStart"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="29dp"
-        android:layout_marginLeft="18dp"
-        android:layout_marginTop="2dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="130dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Jenis Gangguan"
-            android:textAlignment="viewStart"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/showjenisgg"
-            android:layout_width="181dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="@string/NCLI"
-            android:textAlignment="viewStart"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="29dp"
-        android:layout_marginLeft="18dp"
-        android:layout_marginTop="2dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="130dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="No Internet"
-            android:textAlignment="viewStart"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/shownoin"
-            android:layout_width="181dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="@string/NDEM"
-            android:textAlignment="viewStart"
-            android:textStyle="bold" />
-    </LinearLayout>
+                    <TextView
+                        android:id="@+id/showtotik"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="@string/SC"
+                        android:textAlignment="viewStart"
+                        android:textStyle="bold" />
 
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Nama"
+                        android:layout_marginTop="@dimen/appbar_padding_top"
+                        android:textColor="@color/colorBlack"
+                        android:textAlignment="viewStart"
+                        android:textStyle="bold" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="29dp"
-        android:layout_marginLeft="18dp"
-        android:layout_marginTop="2dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="130dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Status"
-            android:textAlignment="viewStart"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/showstatus"
-            android:layout_width="181dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="@string/Alpro_name"
-            android:textAlignment="viewStart"
-            android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/shownama"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="@string/Nama"
+                        android:textAlignment="viewStart"/>
 
 
-    </LinearLayout>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/Alamat"
+                        android:layout_marginTop="@dimen/appbar_padding_top"
+                        android:textColor="@color/colorBlack"
+                        android:textAlignment="textStart"
+                        android:textStyle="bold" />
 
-    <ImageView
-        android:id="@+id/detail_foto_bukti"
-        android:scaleType="fitCenter"
-        android:layout_width="match_parent"
-        android:layout_height="150dp" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="50dp"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/kerjakan"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Kerjakan" />
-
-        <Button
-            android:id="@+id/selesai"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Kirim bukti" />
-
-    </LinearLayout>
+                    <TextView
+                        android:id="@+id/showalamat"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="@string/Alamat"
+                        android:textAlignment="viewStart"/>
 
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/Kotak"
+                        android:textColor="@color/colorBlack"
+                        android:textAlignment="viewStart"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/showkontak"
+                            android:layout_width="0dp"
+                            android:layout_height="30dp"
+                            android:layout_weight="1"
+                            android:hint="@string/Kotak"
+                            android:textAlignment="viewStart"/>
+
+                        <Button
+                            android:id="@+id/btn_call"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:padding="@dimen/appbar_padding_top"
+                            android:background="@drawable/phone" />
+                        <Button
+                            android:id="@+id/btn_wa"
+                            android:layout_width="65dp"
+                            android:layout_height="50dp"
+                            android:padding="@dimen/appbar_padding_top"
+                            android:background="@drawable/wa" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Jenis Gangguan"
+                        android:layout_marginTop="@dimen/appbar_padding_top"
+                        android:textColor="@color/colorBlack"
+                        android:textAlignment="viewStart"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/showjenisgg"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="@string/NCLI"
+                        android:textAlignment="viewStart"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="No Internet"
+                        android:layout_marginTop="@dimen/appbar_padding_top"
+                        android:textColor="@color/colorBlack"
+                        android:textAlignment="viewStart"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/shownoin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="@string/NDEM"
+                        android:textAlignment="viewStart" />
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Status"
+                        android:layout_marginTop="@dimen/appbar_padding_top"
+                        android:textColor="@color/colorBlack"
+                        android:textAlignment="viewStart"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/showstatus"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="@string/Alpro_name"
+                        android:textAlignment="viewStart"/>
+
+
+                    <ImageView
+                        android:id="@+id/detail_foto_bukti"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:scaleType="fitCenter" />
+
+
+                    <Button
+                        android:id="@+id/kerjakan"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Kerjakan" />
+
+                    <Button
+                        android:id="@+id/selesai"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Kirim bukti" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

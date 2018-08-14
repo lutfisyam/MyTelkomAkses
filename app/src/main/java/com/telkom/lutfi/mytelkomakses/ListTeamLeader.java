@@ -76,13 +76,6 @@ public class ListTeamLeader extends AppCompatActivity {
                 holder.setNama(nama_teknisi);
                 holder.setEmail(email_teknisi);
                 holder.deleteUser(email_teknisi, pass_teknisi, nama_teknisi, id_teknisi);
-
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(ListTeamLeader.this, id_teknisi, Toast.LENGTH_LONG).show();
-                    }
-                });
             }
 
             @Override
@@ -241,12 +234,14 @@ public class ListTeamLeader extends AppCompatActivity {
                                         if (task.isSuccessful()) {
 
                                             String newUid = mAuth.getCurrentUser().getUid();
-                                            Map<String, String> new_user = new HashMap<>();
+                                            Map<String, Object> new_user = new HashMap<>();
                                             new_user.put("nip", id);
                                             new_user.put("nama", nama);
                                             new_user.put("email", email);
                                             new_user.put("pass", password);
                                             new_user.put("jenis", "leader");
+                                            new_user.put("longlitude", new Double(152.7130015));
+                                            new_user.put("latitude", new Double (-27.3818631));
 
                                             // table dot primary dot isi
                                             mFireStore.collection("user").document(newUid).set(new_user)
